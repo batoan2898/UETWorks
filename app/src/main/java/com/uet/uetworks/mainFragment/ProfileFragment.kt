@@ -1,19 +1,13 @@
 package com.uet.uetworks.mainFragment
 
-
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import com.uet.uetworks.R
 
-/**
- * A simple [Fragment] subclass.
- */
 class ProfileFragment : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,5 +16,12 @@ class ProfileFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
-
+    companion object {
+        @JvmStatic
+        fun newInstance() =
+            ProfileFragment().apply {
+                arguments = Bundle().apply {
+                }
+            }
+    }
 }

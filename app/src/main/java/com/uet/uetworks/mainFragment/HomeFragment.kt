@@ -1,19 +1,13 @@
 package com.uet.uetworks.mainFragment
 
-
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
 import com.uet.uetworks.R
 
-/**
- * A simple [Fragment] subclass.
- */
 class HomeFragment : Fragment() {
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,5 +16,13 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
-
+    companion object {
+        @JvmStatic
+        fun newInstance() =
+            HomeFragment().apply {
+                arguments = Bundle().apply {
+                }
+            }
+    }
 }
+
