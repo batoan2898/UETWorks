@@ -1,8 +1,9 @@
-package com.uet.uetworks
+package com.uet.uetworks.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.uet.uetworks.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {

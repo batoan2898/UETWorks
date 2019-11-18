@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".LoginActivity" >
+    tools:context=".ui.LoginActivity" >
 
     <ImageView
         android:id="@+id/imgLogo"
@@ -60,7 +60,7 @@
         android:clickable="true"
         android:gravity="right"
         android:text="Quên mật khẩu"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/colorAccent"
         android:textSize="14sp" />
 
     <Button

@@ -1,4 +1,4 @@
-package com.uet.uetworks.mainFragment
+package com.uet.uetworks.ui.main
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.uet.uetworks
+package com.uet.uetworks.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,7 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.uet.uetworks.mainFragment.*
+import com.uet.uetworks.R
+import com.uet.uetworks.ui.main.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {

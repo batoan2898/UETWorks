@@ -1,8 +1,9 @@
-package com.uet.uetworks
+package com.uet.uetworks.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import com.uet.uetworks.R
 import kotlinx.android.synthetic.main.activity_recover_pass.*
 
 class RecoverPassActivity : AppCompatActivity() {
