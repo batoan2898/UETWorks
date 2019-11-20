@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imgLogo2"
+        android:layout_width="match_parent"
+        android:layout_weight="0.15"
+        android:layout_height="0dp"
+        app:srcCompat="@mipmap/logo_app" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_info_title"
+            android:layout_width="0dp"
+            android:layout_weight="0.7"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="23sp"
+            android:text="@string/profile">
+        </TextView>
+        <Button android:layout_height="35dp"
+            android:text="@string/update"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/button_rounded_corners"
+            android:layout_weight="0.25"
+            android:layout_width="0dp">
+        </Button>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.7"
+        android:paddingLeft="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginBottom="10dp"
+            android:background="#BA100D0D" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_name_title"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/name"/>
+
+            <EditText
+                android:id="@+id/et_name_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="Nhập họ và tên"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_address_title"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/address"/>
+
+            <EditText
+                android:id="@+id/et_address_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="Nhập địa chỉ"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_dob_title"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/dob"/>
+
+            <EditText
+                android:id="@+id/et_dob_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="dd/mm/yyyy"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/tv_email_title"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/email"/>
+
+            <EditText
+                android:id="@+id/et_email_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="Your email"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_phone_title"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/phone_bumber"/>
+
+            <EditText
+                android:id="@+id/et_phone_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="Nhập SDT"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_skype_title"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/skype"/>
+            <EditText
+                android:id="@+id/et_skype_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="Nhập địa chỉ skype"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_hobby_title"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/hobby"/>
+
+            <EditText
+                android:id="@+id/et_hobby_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="Nhập sở thích của bạn"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_class_title"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/className"/>
+
+            <EditText
+                android:id="@+id/et_class_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="Nhập tên lớp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_skill_title"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/skill"/>
+
+            <EditText
+                android:id="@+id/et_skill_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:layout_gravity="center_vertical"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="Kĩ năng chuyên môn"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_foreignlg_title"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:text="@string/foreignLanguage"/>
+
+            <EditText
+                android:id="@+id/et_foreignlg_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_input"
+                android:textSize="15sp"
+                android:padding="7dp"
+                android:hint="Trình độ ngoại ngữ"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <Button
+            android:layout_width="100dp"
+            android:id="@+id/btn_logout"
+            android:background="@drawable/button_rounded_corners"
+            android:textColor="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="@string/logout"/>
+        <Button
+            android:layout_width="100dp"
+            android:id="@+id/btn_changePass"
+            android:background="@drawable/button_rounded_corners"
+            android:textColor="@color/colorWhite"
+            android:layout_marginLeft="20dp"
+            android:text="@string/changePass"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</LinearLayout>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.ProfileFragment">
+
+    <TextView
+        android:id="@+id/tvProfile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/title_profile" />
+</FrameLayout>
