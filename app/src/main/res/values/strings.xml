@@ -23,5 +23,6 @@
     <string name="foreignLanguage">Ngoại ngữ</string>
     <string name="logout">Đăng xuất</string>
     <string name="changePass">Đổi mật khẩu</string>
+    <string name="enrol">Đăng ký</string>
 
 </resources>
