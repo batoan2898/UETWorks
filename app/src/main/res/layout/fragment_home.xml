@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.main.HomeFragment">
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +17,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:clickable="true">
 
             <TextView
@@ -26,70 +31,38 @@
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingTop="50dp"
-                android:text="*nội dung"
-                android:textSize="18sp" />
         </FrameLayout>
 
-        <FrameLayout
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvHomeTitle1"
+                android:id="@+id/tvInternshipTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:paddingLeft="10dp"
-                android:text="Thực tập chuyên ngành đợt 2"
+                android:text="Thực tập chuyên ngành"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingTop="45dp"
-                android:text="*nội dung"
-                android:textSize="18sp" />
-        </FrameLayout>
+            <Button
+                android:layout_gravity="center"
+                android:layout_height="35dp"
+                android:text="@string/enrol"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/button_rounded_corners"
+                android:layout_width="wrap_content"/>
+        </LinearLayout>
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp">
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tvHomeTitle2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:paddingLeft="10dp"
-                android:text="Đăng ký thực tập công ty ngoài"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingTop="45dp"
-                android:text="*nội dung"
-                android:textSize="18sp" />
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-            <TextView
-                android:id="@+id/tvHomeTitle3"
+                android:id="@+id/tvInternshipPartner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -98,14 +71,49 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/textView4"
+            <ImageButton
+                android:src="@android:drawable/ic_input_add"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_alignParentRight="true"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/btnShowPost"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                android:visibility="visible"
+                android:layout_below="@id/tvInternshipPartner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingTop="45dp"
-                android:text="*nội dung"
-                android:textSize="18sp" />
-        </FrameLayout>
+                android:id="@+id/recyclerHome"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvInternshipOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:paddingLeft="10dp"
+                android:text="Thực tập công ty ngoài"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:src="@android:drawable/ic_input_add"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_alignParentRight="true"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:id="@+id/btnShowOther"/>
+
+
+        </RelativeLayout>
+
+
     </LinearLayout>
-</FrameLayout>
+</LinearLayout>
