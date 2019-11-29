@@ -1,13 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.StatusFragment">
 
     <TextView
-        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Đợt 2 năm 2019"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="70dp"
+        android:text="Giảng viên:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvStatusTeacher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="70dp"
+        android:text="Nguyễn XXX XXX" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="90dp"
+        android:text="Loại thực tập:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvStatusKind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="90dp"
+        android:text="Công ty" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="110dp"
+        android:text="Nơi thực tập:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvStatusPlace"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="110dp"
+        android:text="Công ty TNHH XXX" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="130dp"
+        android:text="Điểm:"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvStatusMark"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="130dp"
+        android:text="S+" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerStatusFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/title_status" />
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginRight="20dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
 </FrameLayout>
