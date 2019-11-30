@@ -1,4 +1,4 @@
-package com.savvy.chatland.api;
+package com.uet.uetworks.api;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
