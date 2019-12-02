@@ -1,16 +1,15 @@
 package com.uet.uetworks.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.uet.uetworks.R
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.User
 import kotlinx.android.synthetic.main.activity_login.*
 import org.apache.commons.codec.binary.Hex
-import org.apache.commons.codec.cli.Digest
 import org.apache.commons.codec.digest.DigestUtils
 import retrofit2.Call
 import retrofit2.Callback
