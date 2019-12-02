@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     tools:context=".ui.main.HomeFragment">
-
 
 
     <LinearLayout
@@ -24,37 +22,47 @@
                 android:id="@+id/tvNewNotification"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
                 android:text="Thông báo mới!"
                 android:textColor="@color/colorPrimary"
                 android:textSize="30sp"
                 android:textStyle="bold" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerNewNotification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="45dp"
+                android:layout_marginRight="10dp"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
         </FrameLayout>
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvInternshipTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:clickable="true"
-                android:paddingLeft="10dp"
                 android:text="Thực tập chuyên ngành"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <Button
-                android:layout_gravity="center"
+                android:layout_width="wrap_content"
                 android:layout_height="35dp"
-                android:text="@string/enrol"
-                android:textColor="@color/colorWhite"
+                android:layout_gravity="center"
                 android:background="@drawable/button_rounded_corners"
-                android:layout_width="wrap_content"/>
+                android:text="@string/enrol"
+                android:textColor="@color/colorWhite" />
         </LinearLayout>
 
         <RelativeLayout
@@ -65,27 +73,41 @@
                 android:id="@+id/tvInternshipPartner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:clickable="true"
-                android:paddingLeft="10dp"
                 android:text="Thực tập đối tác của khoa"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <ImageButton
-                android:src="@android:drawable/ic_input_add"
+                android:id="@+id/btnShowPost"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_alignParentRight="true"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:id="@+id/btnShowPost"/>
+                android:layout_alignParentRight="true"
+                android:src="@android:drawable/ic_input_add" />
+
+            <EditText
+                android:id="@+id/edtSearchPartner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvInternshipPartner"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:textSize="12sp" />
 
             <androidx.recyclerview.widget.RecyclerView
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                android:visibility="visible"
-                android:layout_below="@id/tvInternshipPartner"
-                android:layout_width="wrap_content"
+                android:id="@+id/recyclerHome"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/recyclerHome"/>
+                android:layout_below="@id/edtSearchPartner"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
 
         </RelativeLayout>
 
@@ -97,19 +119,75 @@
                 android:id="@+id/tvInternshipOther"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:clickable="true"
-                android:paddingLeft="10dp"
                 android:text="Thực tập công ty ngoài"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
             <ImageButton
-                android:src="@android:drawable/ic_input_add"
+                android:id="@+id/btnShowOther"
                 style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_alignParentRight="true"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:id="@+id/btnShowOther"/>
+                android:layout_alignParentRight="true"
+                android:src="@android:drawable/ic_input_add" />
+
+            <EditText
+                android:id="@+id/edtSearchOther"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvInternshipOther"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/edtOther1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtSearchOther"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="1" />
+
+            <EditText
+                android:id="@+id/edtOther2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtOther1"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="2" />
+
+            <EditText
+                android:id="@+id/edtOther3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtOther2"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="3" />
+
+            <EditText
+                android:id="@+id/edtOther4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtOther3"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="4" />
 
 
         </RelativeLayout>
