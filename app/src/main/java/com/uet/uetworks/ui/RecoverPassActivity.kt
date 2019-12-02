@@ -14,7 +14,7 @@ import retrofit2.Response
 
 class RecoverPassActivity : AppCompatActivity(), Callback<String> {
     lateinit var api: Api
-    var email: String = ""
+    var emailVNU: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,21 +24,21 @@ class RecoverPassActivity : AppCompatActivity(), Callback<String> {
         btnForgotPass.setOnClickListener {
             if (checkEmail()) {
                 if (CommonMethod.isNetworkAvailable(this))
-                    resetPassRetrofit(email)
+                    resetPassRetrofit(emailVNU)
                 else CommonMethod.showAlert("Internet Connectivity Failure", this)
             }
         }
     }
 
     private fun checkEmail(): Boolean {
-        email = edtEmail.text.toString()
-        if (email.isEmpty()) {
+        emailVNU = edtEmail.text.toString()
+        if (emailVNU.isEmpty()) {
             Toast.makeText(this, "Data Empty", Toast.LENGTH_SHORT).show()
             return false
-        } else if (email.indexOf(" ") > 0
-            || email.indexOf("@") == -1
-            || email.indexOf("@") != email.lastIndexOf("@")
-            || email.lastIndexOf(".") == email.length - 1
+        } else if (emailVNU.indexOf(" ") > 0
+            || emailVNU.indexOf("@") == -1
+            || emailVNU.indexOf("@") != emailVNU.lastIndexOf("@")
+            || emailVNU.lastIndexOf(".") == emailVNU.length - 1
         ) {
             Toast.makeText(this, "Data Error", Toast.LENGTH_SHORT).show()
             return false
@@ -56,7 +56,7 @@ class RecoverPassActivity : AppCompatActivity(), Callback<String> {
     }
 
     override fun onResponse(call: Call<String>, response: Response<String>) {
-        var email: String? = response.body()
+        var emailVNU: String? = response.body()
         Toast.makeText(this, response.code().toString(), Toast.LENGTH_SHORT).show()
         if (response.code() == 200) {
             Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show()
@@ -64,7 +64,7 @@ class RecoverPassActivity : AppCompatActivity(), Callback<String> {
             startActivity(intent)
             finish()
         } else {
-            Toast.makeText(this, "Sai", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
         }
     }
 }

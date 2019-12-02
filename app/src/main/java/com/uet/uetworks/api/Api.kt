@@ -20,7 +20,7 @@ interface Api {
     @PUT("/resetPass")
     @Headers("Content-Type: application/json", "Accept: application/json")
     @RawRes
-    fun resetPass(@Body resetPass: String): Call<String>
+    fun resetPass(@Body emailVNU: String): Call<String>
 }
 
 
