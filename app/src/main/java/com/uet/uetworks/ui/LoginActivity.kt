@@ -74,8 +74,6 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
         } else {
             Toast.makeText(this, "Sai", Toast.LENGTH_SHORT).show()
         }
-
     }
-
 }
 
