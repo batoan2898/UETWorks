@@ -7,12 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.uet.uetworks.R
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
+import com.uet.uetworks.model.EmailVNU
 import kotlinx.android.synthetic.main.activity_recover_pass.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class RecoverPassActivity : AppCompatActivity(), Callback<String> {
+class RecoverPassActivity : AppCompatActivity(), Callback<EmailVNU> {
     lateinit var api: Api
     var emailVNU: String = ""
 
@@ -47,16 +48,16 @@ class RecoverPassActivity : AppCompatActivity(), Callback<String> {
     }
 
     private fun resetPassRetrofit(email: String) {
-        val callResetPass = api.resetPass(email)
+        val emailReset = EmailVNU(email)
+        val callResetPass = api.resetPass(emailReset)
         callResetPass.enqueue(this)
     }
 
-    override fun onFailure(call: Call<String>, t: Throwable) {
-        Toast.makeText(this, "Reset Pass Failed!", Toast.LENGTH_SHORT).show()
+    override fun onFailure(call: Call<EmailVNU>, t: Throwable) {
+        Toast.makeText(this, "Failed!", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onResponse(call: Call<String>, response: Response<String>) {
-        var emailVNU: String? = response.body()
+    override fun onResponse(call: Call<EmailVNU>, response: Response<EmailVNU>) {
         Toast.makeText(this, response.code().toString(), Toast.LENGTH_SHORT).show()
         if (response.code() == 200) {
             Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show()

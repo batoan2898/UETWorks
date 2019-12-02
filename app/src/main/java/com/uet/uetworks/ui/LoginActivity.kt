@@ -2,8 +2,10 @@ package com.uet.uetworks.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
@@ -20,6 +22,11 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
     lateinit var api: Api
     var userName: String = ""
     var password: String = ""
+    var token: String? = null
+    var id: Int? = null
+    var infoBySchoolId: Int? = null
+    var studentId: Int? = null
+    var role: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +59,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
 
     private fun loginRetrofit(userName: String, password: String) {
         var passwordHex = String(Hex.encodeHex(DigestUtils.md5(password)))
-        var user = User(userName, passwordHex)
+        val user = User(userName, passwordHex,null,null,null,null,null)
         val callLogin = api.login(user)
         callLogin.enqueue(this)
     }
@@ -63,13 +70,18 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
     }
 
     override fun onResponse(call: Call<User>, response: Response<User>) {
-        var user: User? = response.body()
-        Toast.makeText(this, response.code().toString(), Toast.LENGTH_SHORT).show()
         if (response.code() == 200) {
+            token = response.body()?.token
+            id = response.body()?.id
+            role = response.body()?.role
+            infoBySchoolId = response.body()?.infoBySchool
+            studentId = response.body()?.studentId
             Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
+            MySharedPreferences.setToken(token)
+            MySharedPreferences.setLogin(isLogin = true)
         } else {
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
         }
