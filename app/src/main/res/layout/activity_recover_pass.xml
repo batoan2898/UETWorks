@@ -8,14 +8,12 @@
     tools:context=".ui.RecoverPassActivity">
 
     <ImageView
-        android:id="@+id/imgLogo2"
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:layout_marginTop="40dp"
         app:srcCompat="@mipmap/logo_app" />
 
     <TextView
-        android:id="@+id/tvForgotPassTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -25,7 +23,6 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/tvForgotPassDetail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
@@ -35,7 +32,6 @@
         android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/tvEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -45,7 +41,7 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/edtEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
