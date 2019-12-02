@@ -37,7 +37,6 @@ class RecoverPassActivity : AppCompatActivity(), Callback<String> {
             return false
         } else if (email.indexOf(" ") > 0
             || email.indexOf("@") == -1
-            || email.indexOf(".") != -1
             || email.indexOf("@") != email.lastIndexOf("@")
             || email.lastIndexOf(".") == email.length - 1
         ) {
