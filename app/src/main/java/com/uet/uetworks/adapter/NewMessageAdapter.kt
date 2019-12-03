@@ -1,0 +1,67 @@
+package com.uet.uetworks.adapter
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.uet.uetworks.R
+import com.uet.uetworks.model.NewMessage
+import kotlinx.android.synthetic.main.item_notification.view.*
+
+
+class NewMessageAdapter (context: Context?, private val onClickListener: OnClickMessage) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return NewMessageHolder(inflater.inflate(R.layout.item_notification, parent, false))
+    }
+
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
+    private var data: ArrayList<NewMessage?>? = null
+
+
+    fun setData(data: ArrayList<NewMessage?>) {
+        this.data = data
+        notifyDataSetChanged()
+    }
+
+    override fun getItemCount(): Int {
+        return data?.size ?:0
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val message = this.data?.get(position)
+        if (holder is NewMessageHolder) {
+            showMessage(holder, position)
+        }
+        if (onClickListener != null) {
+            holder.itemView.setOnClickListener {
+                if (message != null) {
+
+                }
+            }
+        }
+
+    }
+
+
+    private fun showMessage(holder: NewMessageHolder, position: Int) {
+        val item = data?.get(position)
+        item?.let { holder.bindData(it) }
+    }
+
+    open class NewMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        fun bindData(message: NewMessage) {
+            itemView.tvMessageTitle.text = message.title
+            itemView.tvMessageContent.text = message.content
+            itemView.tvSendDate.text = message.sendDate.toString()
+            itemView.tvSenderName.text = message.senderName
+        }
+
+    }
+
+
+
+    interface OnClickMessage {
+    }
+}

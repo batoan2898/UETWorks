@@ -11,7 +11,7 @@ object MySharedPreferences {
 
     private const val KEY_LOGIN = "KEY_LOGIN"
 
-    private const val TOKEN = ""
+    public const val TOKEN = ""
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(MY_SHARE_PREFERENCES, Context.MODE_PRIVATE)

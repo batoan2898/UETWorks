@@ -33,7 +33,7 @@ class NotificationAdapter(val notificationList: ArrayList<Notification>) :
 
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvNotificationTitle = itemView.findViewById(R.id.tvNotificationTitle) as TextView
-        val tvNotificationDetail = itemView.findViewById(R.id.tvNotificationDetail) as TextView
+        val tvNotificationTitle = itemView.findViewById(R.id.tvMessageTitle) as TextView
+        val tvNotificationDetail = itemView.findViewById(R.id.tvMessageContent) as TextView
     }
 }

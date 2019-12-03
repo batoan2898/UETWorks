@@ -72,6 +72,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
     override fun onResponse(call: Call<User>, response: Response<User>) {
         if (response.code() == 200) {
             token = response.body()?.token
+            Log.e("toan",token.toString())
             id = response.body()?.id
             role = response.body()?.role
             infoBySchoolId = response.body()?.infoBySchool

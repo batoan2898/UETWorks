@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.uet.uetworks.R
 
-class HomeInternshipPartnerAdapter(context: Context?, private val onClickListener: OnClickVideo) :
+class HomeInternshipPartnerAdapter(context: Context?, private val onClickListener: OnClickPost) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     companion object {
         private val VIEW_TYPE_LOADING = 1
@@ -65,7 +65,9 @@ class HomeInternshipPartnerAdapter(context: Context?, private val onClickListene
 
     inner class LoadingItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
-}
 
-interface OnClickVideo {
+
+    interface OnClickPost {
+
+    }
 }

@@ -9,23 +9,43 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp">
 
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="10dp">
 
+            <View
+                android:id="@+id/viewCenter"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_centerHorizontal="true"/>
+
             <TextView
-                android:id="@+id/tvNotificationTitle"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@id/viewCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvSenderName"/>
+            <TextView
+                android:layout_toRightOf="@id/viewCenter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvSendDate"
+                android:layout_alignParentRight="true" />
+
+            <TextView
+                android:id="@+id/tvMessageTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvNotificationDetail"
+                android:id="@+id/tvMessageContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
-        </LinearLayout>
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

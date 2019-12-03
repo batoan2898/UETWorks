@@ -2,13 +2,12 @@ package com.uet.uetworks.api
 
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
+import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.model.EmailVNU
+import com.uet.uetworks.model.NewMessage
 import com.uet.uetworks.model.User
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 interface Api {
     @SuppressLint("SupportAnnotationUsage")
@@ -22,6 +21,18 @@ interface Api {
     @Headers("Content-Type: application/json", "Accept: application/json")
     @RawRes
     fun resetPass(@Body email: EmailVNU): Call<EmailVNU>
+
+
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/message/new")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json",
+        "auth-token: 56ad99ce-ecae-4fa7-8289-c8994918f772"
+    )
+    @RawRes
+    fun getMessage(): Call<List<NewMessage>>
+
 }
 
 
