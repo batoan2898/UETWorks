@@ -81,7 +81,8 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-            MySharedPreferences.setToken(token)
+            MySharedPreferences.setToken(token = token!!)
+            Log.e("toan",MySharedPreferences.TOKEN)
             MySharedPreferences.setLogin(isLogin = true)
         } else {
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()

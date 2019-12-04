@@ -36,16 +36,14 @@
                 android:layout_alignParentRight="true" />
 
             <TextView
+                android:layout_below="@id/tvSendDate"
                 android:id="@+id/tvMessageTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvMessageContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 </LinearLayout>

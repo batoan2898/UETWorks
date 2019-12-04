@@ -19,6 +19,7 @@ internal object ApiBuilder {
                     .build()
 
 
+
                 if (retrofit == null) {
                     retrofit = Retrofit.Builder()
                         .baseUrl(BASE_URL)

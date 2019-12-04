@@ -1,14 +1,18 @@
 package com.uet.uetworks.ui.main
 
+import android.app.AlertDialog
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.uet.uetworks.R
 import com.uet.uetworks.adapter.NewMessageAdapter
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
@@ -18,14 +22,20 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.uet.uetworks.MySharedPreferences
+import com.uet.uetworks.R
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
+
 
     private var dataAll = MutableLiveData<java.util.ArrayList<NewMessage?>>()
     private lateinit var newMessageAdapter: NewMessageAdapter
     lateinit var api: Api
     private var dataResponse: ArrayList<NewMessage> = arrayListOf()
+
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -35,51 +45,80 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
         recyclerNewMessage.setHasFixedSize(true)
         newMessageAdapter = NewMessageAdapter(context, this)
         recyclerNewMessage.adapter = newMessageAdapter
-        getData()
+        getDataNewMessage()
         initView()
-        Log.e("toan", "hwee")
     }
+
+
 
     private fun initView() {
         dataAll.observe(this, Observer {
             newMessageAdapter.setData(it)
         })
 
+        initViewNewMessage()
+
     }
 
-    private fun getData() {
+    private fun initViewNewMessage() {
+
+        btnShowNotification.setOnClickListener {
+            if (recyclerNewMessage.isVisible){
+                recyclerNewMessage.visibility = View.GONE
+            }else if (recyclerNewMessage.isGone){
+                recyclerNewMessage.visibility = View.VISIBLE
+            }
+        }
+
+    }
+
+
+    private fun getDataNewMessage() {
         api = ApiBuilder.client?.create(Api::class.java)!!
-        api.getMessage().enqueue(object : Callback<List<NewMessage>> {
+        api.getMessage(MySharedPreferences.getToken()).enqueue(object : Callback<List<NewMessage>> {
             override fun onFailure(call: Call<List<NewMessage>>, t: Throwable) {
-                Log.e("toan", "failed")
+                Log.e("toan", t.message)
+
             }
 
             override fun onResponse(
                 call: Call<List<NewMessage>>,
                 response: Response<List<NewMessage>>
             ) {
-                Log.e("toan", response.code().toString())
-
                 response.body()?.let { body ->
+                    dataResponse.addAll(body)
                     dataAll.postValue(dataResponse.map { dataResponse ->
                         NewMessage(
                             dataResponse.content,
                             dataResponse.id,
                             dataResponse.lastUpdated,
                             dataResponse.messageType,
-                            dataResponse.messages,
+//                            dataResponse.messages,
                             dataResponse.receiverName,
                             dataResponse.senderName,
                             dataResponse.sendDate,
                             dataResponse.status,
                             dataResponse.title
                         )
-
                     } as ArrayList<NewMessage?>)
+                    Log.e("toan", dataAll.value?.get(0)?.title.toString())
+
                 }
             }
 
         })
+    }
+
+    override fun onMessageClick(message: NewMessage) {
+        var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+
+        builder.setTitle(message.title)
+        builder.setMessage(message.content)
+        builder.setNeutralButton("Ok"){_,_ ->
+            Toast.makeText(requireContext(),"You cancelled the dialog.",Toast.LENGTH_SHORT).show()
+        }
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
     }
 
 

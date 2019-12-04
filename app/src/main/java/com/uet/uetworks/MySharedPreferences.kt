@@ -2,6 +2,8 @@ package com.uet.uetworks
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.text.format.DateFormat
+import java.util.*
 
 object MySharedPreferences {
 
@@ -11,7 +13,8 @@ object MySharedPreferences {
 
     private const val KEY_LOGIN = "KEY_LOGIN"
 
-    public const val TOKEN = ""
+    const val TOKEN = ""
+
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(MY_SHARE_PREFERENCES, Context.MODE_PRIVATE)
@@ -27,11 +30,6 @@ object MySharedPreferences {
         editor.apply()
     }
 
-//    var isLogin: Boolean
-//        get() = preferences.getBoolean(KEY_LOGIN, false)
-//        set(status) = preferences.edit {
-//            it.putBoolean(KEY_LOGIN, status)
-//        }
 
     fun checkLogin(): Boolean {
         return preferences.getBoolean(KEY_LOGIN, true)
@@ -43,9 +41,19 @@ object MySharedPreferences {
         }
     }
 
-    fun setToken(token: String?) {
+    fun setToken(token: String) {
         preferences.edit {
-            it.putString(TOKEN, token.toString())
+            it.putString(TOKEN, token)
         }
+    }
+
+    fun getToken(): String {
+        return preferences.getString(TOKEN, TOKEN).toString()
+    }
+
+    fun getDate(time: Long): String {
+        val cal = Calendar.getInstance(Locale.ENGLISH)
+        cal.setTimeInMillis(time)
+        return DateFormat.format("dd-MM-yyyy HH:mm:ss", cal).toString()
     }
 }
