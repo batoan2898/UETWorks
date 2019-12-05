@@ -2,22 +2,14 @@ package com.uet.uetworks.api
 
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
-import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.model.EmailVNU
 import com.uet.uetworks.model.NewMessage
+import com.uet.uetworks.model.Student
 import com.uet.uetworks.model.User
 import retrofit2.Call
 import retrofit2.http.*
-import roboguice.util.SafeAsyncTask.Task
 import retrofit2.http.Url
 
-
-import com.google.gson.JsonObject
-import com.uet.uetworks.model.User
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Response
-import retrofit2.http.*
 
 
 interface Api {
@@ -81,6 +73,16 @@ interface Api {
         @Header("auth-token") token: String
     )
 
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/studentInfo")
+    @RawRes
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    fun getStudentInfo(
+        @Header("auth-token") token: String
+    ): Call<Student>
 
 }
 

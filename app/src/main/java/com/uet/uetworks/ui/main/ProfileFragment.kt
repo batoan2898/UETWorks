@@ -1,29 +1,28 @@
 package com.uet.uetworks.ui.main
 
-import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
-import com.uet.uetworks.Service.ProfilesService
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
-import com.uet.uetworks.model.StudentInfo
-import com.uet.uetworks.model.User
+import com.uet.uetworks.model.Student
 import com.uet.uetworks.ui.LoginActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class ProfileFragment : Fragment() {
+    lateinit var api: Api
+    private lateinit var dataResponse: Student
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -34,6 +33,9 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        var manager = LinearLayoutManager(requireContext())
+        getInfoUser()
+        Log.e("token",MySharedPreferences.getInstance(requireContext()).getToken())
         setUpView()
     }
     private fun setUpView() {
@@ -53,42 +55,36 @@ class ProfileFragment : Fragment() {
     }
 
 
-    internal fun getInfoUser(studentId: String) {
-//        val retrofit = ApiBuilder.client;
-//
-//        val requestApi = retrofit?.create(Api::class.java!!)
-//
-//        val call = requestApi?.getInfoStudent(userId)
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://112.137.129.69:8180")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val service = retrofit.create(ProfilesService::class.java)
-        val call = service.getInfoStudent(studentId)
-     
-        call.enqueue(object : Callback<StudentInfo> {
-                override fun onResponse(call: Call<StudentInfo>, response: Response<StudentInfo>) {
-                    if(response.code() == 200){
-                        val studentInfo = response.body()!!
-                        et_name_input.setText(studentInfo.fullName)
-                        et_dob_input.setText(studentInfo.birthday)
+    internal fun getInfoUser() {
+        api = ApiBuilder.client?.create(Api::class.java)!!
+        Log.e("toantoken",MySharedPreferences.getInstance(requireContext()).getToken())
+        api.getStudentInfo(MySharedPreferences.getInstance(requireContext()).getToken()).enqueue(object : Callback<Student> {
+            override fun onFailure(call: Call<Student>, t: Throwable) {
+                Log.e("Error student info", t.message.toString())
+            }
 
-                        et_email_input.setText(studentInfo.email)
-                        et_address_input.setText(studentInfo.address)
-                        et_phone_input.setText(studentInfo.phoneNumber)
-                    }
+            override fun onResponse(call: Call<Student>, response: Response<Student>) {
+                if (response.code() == 200) {
+                    dataResponse = response.body()!!
+                    et_name_input.setText(dataResponse.fullName)
+                    et_address_input.setText(dataResponse.address)
+                    et_dob_input.setText(dataResponse.birthday)
+                    et_email_input.setText(dataResponse.email)
+                    et_phone_input.setText(dataResponse.phoneNumber)
+                    et_skype_input.setText(dataResponse.skype)
+                    et_class_input.setText(dataResponse.infoBySchool.studentClass)
+                    et_skill_input.setText(dataResponse.infoBySchool.major)
+                    et_foreignlg_input.setText("")
+                    et_hobby_input.setText("")
+
                 }
 
-                override fun onFailure(call: Call<StudentInfo>, t: Throwable) {
-                    AlertDialog.Builder(activity!!)
-                        .setTitle("Waring")
-                        .setMessage("Can't get user data")
-                        .setCancelable(true)
-                        .show()
-                }
+            }
+
         })
-        
+
     }
+
     companion object {
         @JvmStatic
         fun newInstance() =
@@ -97,9 +93,9 @@ class ProfileFragment : Fragment() {
                 }
             }
     }
-    
-}
 
-private fun Any.enqueue(callback: Callback<StudentInfo>) {
+    }
 
-}
+    private fun Any.enqueue(callback: Callback<Student>) {
+
+    }

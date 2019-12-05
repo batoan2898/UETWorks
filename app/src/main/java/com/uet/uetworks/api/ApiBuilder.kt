@@ -1,9 +1,7 @@
 package com.uet.uetworks.api
 
-import android.app.Service
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import okhttp3.Interceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
