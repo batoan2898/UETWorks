@@ -1,20 +1,19 @@
 package com.uet.uetworks.adapter
 
-
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.uet.uetworks.R
-import com.uet.uetworks.model.Notification
+import com.uet.uetworks.model.Company
 
-class NotificationAdapter(val notificationList: ArrayList<Notification>) :
-    RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
+class StatusAdapter(val companyList: ArrayList<Company>) :
+    RecyclerView.Adapter<StatusAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.item_notification,
+                R.layout.item_status,
                 parent,
                 false
             )
@@ -22,18 +21,17 @@ class NotificationAdapter(val notificationList: ArrayList<Notification>) :
     }
 
     override fun getItemCount(): Int {
-        return notificationList.size
+        return companyList.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val notification: Notification = notificationList[position]
-        holder.tvNotificationTitle.text = notification.notificationTitle
-        holder.tvNotificationDetail.text = notification.notificationDetail
+        val company: Company = companyList[position]
+        holder.tvCompanyName.text = company.companyName
+        holder.tvCompanyStatus.text = company.companyStatus
     }
 
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvNotificationTitle = itemView.findViewById(R.id.tvMessageTitle) as TextView
-        val tvNotificationDetail = itemView.findViewById(R.id.tvMessageContent) as TextView
+        val tvCompanyName = itemView.findViewById(R.id.tvCompanyName) as TextView
+        val tvCompanyStatus = itemView.findViewById(R.id.tvCompanyStatus) as TextView
     }
 }

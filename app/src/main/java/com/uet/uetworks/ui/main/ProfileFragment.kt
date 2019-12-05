@@ -2,16 +2,20 @@ package com.uet.uetworks.ui.main
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
 import com.uet.uetworks.Service.ProfilesService
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.StudentInfo
+import com.uet.uetworks.model.User
+import com.uet.uetworks.ui.LoginActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -26,6 +30,19 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_profile, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setUpView()
+    }
+    private fun setUpView() {
+        btn_logout.setOnClickListener {
+            MySharedPreferences.getInstance(requireContext()).setLogin(isLogin = false)
+            MySharedPreferences.getInstance(requireContext()).setToken("")
+            requireActivity().startActivity(Intent(requireActivity(), LoginActivity::class.java))
+            requireActivity().finish()
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
