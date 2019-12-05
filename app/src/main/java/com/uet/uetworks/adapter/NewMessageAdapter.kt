@@ -47,9 +47,6 @@ class NewMessageAdapter (context: Context?, private val onClickListener: OnClick
 
     }
 
-
-
-
     private fun showMessage(holder: NewMessageHolder, position: Int) {
         val item = data?.get(position)
         item?.let { holder.bindData(it) }

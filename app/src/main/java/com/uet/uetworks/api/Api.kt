@@ -9,6 +9,9 @@ import com.uet.uetworks.model.User
 import retrofit2.Call
 import retrofit2.http.*
 import roboguice.util.SafeAsyncTask.Task
+import retrofit2.http.Url
+
+
 
 
 interface Api {
@@ -32,18 +35,31 @@ interface Api {
         "Accept: application/json"
     )
     @RawRes
-    fun getMessage(@Header("auth-token") token : String ): Call<List<NewMessage>>
+    fun getMessage(@Header("auth-token") token: String): Call<List<NewMessage>>
+
+
 
     @SuppressLint("SupportAnnotationUsage")
-    @PUT("/message/new")
+    @PUT
     @Headers(
         "Content-Type: application/json",
-        "Accept: application/json",
-        "auth-token: 56ad99ce-ecae-4fa7-8289-c8994918f772"
-    )
+        "Accept: application/json")
     @RawRes
-    fun clickMessage(): Call<List<NewMessage>>
+    fun seenMessage(
+        @Url url: String ,
+        @Header("auth-token") token: String
+    ): Call<NewMessage>
 
+    @SuppressLint("SupportAnnotationUsage")
+    @OPTIONS
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json")
+    @RawRes
+    fun clickMessage(
+        @Url url: String ,
+        @Header("auth-token") token: String
+    ): Call<NewMessage>
 
 
 }

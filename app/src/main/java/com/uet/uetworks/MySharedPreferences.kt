@@ -15,6 +15,8 @@ object MySharedPreferences {
 
     const val TOKEN = ""
 
+    const val ID_MESSAGE = ""
+
 
     fun init(context: Context) {
         preferences = context.getSharedPreferences(MY_SHARE_PREFERENCES, Context.MODE_PRIVATE)
@@ -53,7 +55,17 @@ object MySharedPreferences {
 
     fun getDate(time: Long): String {
         val cal = Calendar.getInstance(Locale.ENGLISH)
-        cal.setTimeInMillis(time)
+        cal.timeInMillis = time
         return DateFormat.format("dd-MM-yyyy HH:mm:ss", cal).toString()
+    }
+
+    fun setIdMessage(id: String){
+        preferences.edit{
+            it.putString(ID_MESSAGE,id)
+        }
+    }
+
+    fun getIdMessage(): String{
+        return preferences.getString(ID_MESSAGE, ID_MESSAGE).toString()
     }
 }

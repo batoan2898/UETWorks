@@ -26,6 +26,7 @@ import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.log
 
 
 class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
@@ -101,7 +102,6 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
                             dataResponse.title
                         )
                     } as ArrayList<NewMessage?>)
-                    Log.e("toan", dataAll.value?.get(0)?.title.toString())
 
                 }
             }
@@ -109,17 +109,53 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
         })
     }
 
-    override fun onMessageClick(message: NewMessage) {
-        var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
 
+    override fun onMessageClick(message: NewMessage) {
+        message.id?.let { MySharedPreferences.setIdMessage(it) }
+        Log.e("id",MySharedPreferences.getIdMessage())
+        clickMessage()
+        var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setTitle(message.title)
         builder.setMessage(message.content)
         builder.setNeutralButton("Ok"){_,_ ->
-            Toast.makeText(requireContext(),"You cancelled the dialog.",Toast.LENGTH_SHORT).show()
+            seenMessage()
+            onAttachFragment(targetFragment)
+
         }
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
+
+    private fun seenMessage() {
+        api.seenMessage("message/"+MySharedPreferences.getIdMessage()+"/seen",MySharedPreferences.getToken())
+            .enqueue(object : Callback<NewMessage>{
+                override fun onFailure(call: Call<NewMessage>, t: Throwable) {
+                    Log.e("seen",t.message)
+                }
+
+                override fun onResponse(call: Call<NewMessage>, response: Response<NewMessage>) {
+                    Log.e("codeSeen", response.code().toString())
+                }
+
+            })
+
+    }
+
+    private fun clickMessage() {
+        api.clickMessage("message/"+MySharedPreferences.getIdMessage()+"/seen",MySharedPreferences.getToken())
+            .enqueue(object : Callback<NewMessage>{
+                override fun onFailure(call: Call<NewMessage>, t: Throwable) {
+                    Log.e("Click",t.message)
+                }
+
+                override fun onResponse(call: Call<NewMessage>, response: Response<NewMessage>) {
+                    Log.e("codeClickSeen", response.code().toString())
+                }
+
+            })
+
+    }
+
 
 
     override fun onCreateView(
