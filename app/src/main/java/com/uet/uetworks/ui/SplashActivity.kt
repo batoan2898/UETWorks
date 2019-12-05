@@ -16,7 +16,7 @@ class SplashActivity : AppCompatActivity() {
     private var handler: Handler = Handler()
     private val runnable = Runnable {
         handler.postDelayed({
-            if (MySharedPreferences.checkLogin()) {
+            if (MySharedPreferences.getInstance(this).checkLogin()) {
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 finish()
             } else {

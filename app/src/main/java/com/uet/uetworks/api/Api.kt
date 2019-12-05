@@ -62,6 +62,20 @@ interface Api {
     ): Call<NewMessage>
 
 
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/post/postType/Recruitment")
+    @RawRes
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    fun getPost(
+        @Query("page")  page: Int,
+        @Query("size")  size: Int,
+        @Header("auth-token") token: String
+    )
+
+
 }
 
 

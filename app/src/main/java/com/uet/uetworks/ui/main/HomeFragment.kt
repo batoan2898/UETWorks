@@ -29,6 +29,7 @@ import kotlin.collections.ArrayList
 import kotlin.math.log
 
 
+@Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
 
 
@@ -47,6 +48,8 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
         newMessageAdapter = NewMessageAdapter(context, this)
         recyclerNewMessage.adapter = newMessageAdapter
         getDataNewMessage()
+        Log.e("token",MySharedPreferences.getInstance(requireContext()).getToken())
+        Log.e("message",MySharedPreferences.getInstance(requireContext()).getIdMessage())
         initView()
     }
 
@@ -76,9 +79,10 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
 
     private fun getDataNewMessage() {
         api = ApiBuilder.client?.create(Api::class.java)!!
-        api.getMessage(MySharedPreferences.getToken()).enqueue(object : Callback<List<NewMessage>> {
+        Log.e("toantoken",MySharedPreferences.getInstance(requireContext()).getToken())
+        api.getMessage(MySharedPreferences.getInstance(requireContext()).getToken()).enqueue(object : Callback<List<NewMessage>> {
             override fun onFailure(call: Call<List<NewMessage>>, t: Throwable) {
-                Log.e("toan", t.message)
+                Log.e("toan", t.message.toString())
 
             }
 
@@ -111,15 +115,19 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
 
 
     override fun onMessageClick(message: NewMessage) {
-        message.id?.let { MySharedPreferences.setIdMessage(it) }
-        Log.e("id",MySharedPreferences.getIdMessage())
+        message.id?.let { MySharedPreferences.getInstance(requireContext()).setIdMessage(it) }
+        Log.e("id",MySharedPreferences.getInstance(requireContext()).getIdMessage())
         clickMessage()
         var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setTitle(message.title)
         builder.setMessage(message.content)
         builder.setNeutralButton("Ok"){_,_ ->
             seenMessage()
-            onAttachFragment(targetFragment)
+            dataAll.observe(this, Observer {
+                it.remove(message)
+                newMessageAdapter.notifyDataSetChanged()
+            })
+
 
         }
         val dialog: AlertDialog = builder.create()
@@ -127,7 +135,9 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
     }
 
     private fun seenMessage() {
-        api.seenMessage("message/"+MySharedPreferences.getIdMessage()+"/seen",MySharedPreferences.getToken())
+        Log.e("toan1","message/"+MySharedPreferences.getInstance(requireContext()).getIdMessage()+"/seen")
+        Log.e("toan2",MySharedPreferences.getInstance(requireContext()).getToken())
+        api.seenMessage("message/"+MySharedPreferences.getInstance(requireContext()).getIdMessage()+"/seen",MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<NewMessage>{
                 override fun onFailure(call: Call<NewMessage>, t: Throwable) {
                     Log.e("seen",t.message)
@@ -142,7 +152,7 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
     }
 
     private fun clickMessage() {
-        api.clickMessage("message/"+MySharedPreferences.getIdMessage()+"/seen",MySharedPreferences.getToken())
+        api.clickMessage("message/"+MySharedPreferences.getInstance(requireContext()).getIdMessage()+"/seen",MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<NewMessage>{
                 override fun onFailure(call: Call<NewMessage>, t: Throwable) {
                     Log.e("Click",t.message)

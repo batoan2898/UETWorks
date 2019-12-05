@@ -14,7 +14,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class NewMessageAdapter (context: Context?, private val onClickListener: OnClickMessage) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PostAdapter (context: Context?, private val onClickListener: OnClickMessage) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return NewMessageHolder(inflater.inflate(R.layout.item_notification, parent, false))
     }
