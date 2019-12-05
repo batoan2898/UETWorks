@@ -1,6 +1,10 @@
 package com.uet.uetworks.model
 
+import android.annotation.SuppressLint
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.util.ArrayList
 
 data class Post(
@@ -20,12 +24,13 @@ data class Content(
     @SerializedName("expiryTime") var expiryTime: String,
     @SerializedName("follows") var listFollows: ArrayList<Follows> = arrayListOf(),
     @SerializedName("id") var idPost: Int,
-    @SerializedName("partnerName") var partnerNAme: String,
+    @SerializedName("partnerContact") var partnerContact: PartnerContact?,
+    @SerializedName("partnerName") var partnerName: String,
     @SerializedName("postType") var postType: String,
     @SerializedName("requiredNumber") var requiredNumber: Int,
     @SerializedName("status") var status: String,
     @SerializedName("title") var title: String
-)
+) : Serializable
 
 
 

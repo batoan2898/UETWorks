@@ -2,12 +2,10 @@ package com.uet.uetworks.ui.main
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -24,20 +22,28 @@ import retrofit2.Response
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
-import java.util.*
+import com.uet.uetworks.adapter.PostAdapter
+import com.uet.uetworks.model.Content
+import com.uet.uetworks.model.Post
 import kotlin.collections.ArrayList
-import kotlin.math.log
+import com.uet.uetworks.ui.PostDetailFragment
+import kotlinx.android.synthetic.main.fragment_post_detail.*
+
 
 
 @Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
+class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.OnClickPost {
 
-
-    private var dataAll = MutableLiveData<java.util.ArrayList<NewMessage?>>()
+    var page: Int = 0
+    var totalPage: Int = 0
+    private var lastPage: Boolean = true
+    private var dataPost = MutableLiveData<java.util.ArrayList<Content?>>()
+    private var dataPostResponse: ArrayList<Content> = arrayListOf()
+    private var dataMessage = MutableLiveData<java.util.ArrayList<NewMessage?>>()
     private lateinit var newMessageAdapter: NewMessageAdapter
+    private lateinit var postAdapter: PostAdapter
     lateinit var api: Api
     private var dataResponse: ArrayList<NewMessage> = arrayListOf()
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,29 +53,110 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
         recyclerNewMessage.setHasFixedSize(true)
         newMessageAdapter = NewMessageAdapter(context, this)
         recyclerNewMessage.adapter = newMessageAdapter
+
+        val managerPost = LinearLayoutManager(requireContext())
+        recyclerPost.layoutManager = managerPost
+        recyclerPost.setHasFixedSize(true)
+        postAdapter = PostAdapter(context, this)
+        recyclerPost.adapter = postAdapter
+
         getDataNewMessage()
-        Log.e("token",MySharedPreferences.getInstance(requireContext()).getToken())
-        Log.e("message",MySharedPreferences.getInstance(requireContext()).getIdMessage())
         initView()
     }
 
 
-
     private fun initView() {
-        dataAll.observe(this, Observer {
+        dataMessage.observe(this, Observer {
             newMessageAdapter.setData(it)
         })
-
+        dataPost.observe(this, Observer {
+            postAdapter.setData(it)
+        })
         initViewNewMessage()
+        initViewPost()
+    }
+
+
+    private fun getPost() {
+        progressBar.visibility = View.VISIBLE
+
+        api.getPost(0, 100, MySharedPreferences.getInstance(requireContext()).getToken())
+            .enqueue(object : Callback<Post> {
+                override fun onFailure(call: Call<Post>, t: Throwable) {
+                    Log.e("getpost", t.message)
+                }
+
+                override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                    progressBar.visibility = View.GONE
+
+                    Log.e("codePost", response.code().toString())
+                    response.body()?.let { body ->
+                        lastPage = body.last
+                        totalPage = body.totalPage
+                        Log.e("page", lastPage.toString())
+                        dataPostResponse.addAll(body.listContent)
+
+                        dataPost.postValue(dataPostResponse.map { dataPostResponse ->
+                            Content(
+                                dataPostResponse.contentPost,
+                                MySharedPreferences.getInstance(requireContext()).getDate(
+                                    dataPostResponse.datePost.toLong()
+                                ),
+                                MySharedPreferences.getInstance(requireContext()).getDate(
+                                    dataPostResponse.expiryTime.toLong()
+                                ),
+                                dataPostResponse.listFollows,
+                                dataPostResponse.idPost,
+                                dataPostResponse.partnerContact,
+                                dataPostResponse.partnerName,
+                                dataPostResponse.postType,
+                                dataPostResponse.requiredNumber,
+                                dataPostResponse.status,
+                                dataPostResponse.title
+                            )
+                        } as ArrayList<Content?>)
+
+                    }
+                }
+            })
+    }
+
+    private fun initViewPost() {
+        btnShowPost.setOnClickListener {
+            if (recyclerPost.isGone) {
+                if (dataPostResponse.isEmpty()) {
+                    getPost()
+                }
+                recyclerPost.visibility = View.VISIBLE
+            } else {
+                recyclerPost.visibility = View.GONE
+            }
+        }
+
+    }
+
+    override fun onPostClick(content: Content) {
+        val postDetailFragment = PostDetailFragment()
+        val bundle = Bundle()
+        bundle.putSerializable("content",content)
+        postDetailFragment.arguments = bundle
+
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .replace((view!!.parent as ViewGroup).id, postDetailFragment, "findThisFragment")
+            .addToBackStack(null)
+            .commit()
+
+
 
     }
 
     private fun initViewNewMessage() {
 
         btnShowNotification.setOnClickListener {
-            if (recyclerNewMessage.isVisible){
+            if (recyclerNewMessage.isVisible) {
                 recyclerNewMessage.visibility = View.GONE
-            }else if (recyclerNewMessage.isGone){
+            } else if (recyclerNewMessage.isGone) {
                 recyclerNewMessage.visibility = View.VISIBLE
             }
         }
@@ -79,51 +166,54 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
 
     private fun getDataNewMessage() {
         api = ApiBuilder.client?.create(Api::class.java)!!
-        Log.e("toantoken",MySharedPreferences.getInstance(requireContext()).getToken())
-        api.getMessage(MySharedPreferences.getInstance(requireContext()).getToken()).enqueue(object : Callback<List<NewMessage>> {
-            override fun onFailure(call: Call<List<NewMessage>>, t: Throwable) {
-                Log.e("toan", t.message.toString())
-
-            }
-
-            override fun onResponse(
-                call: Call<List<NewMessage>>,
-                response: Response<List<NewMessage>>
-            ) {
-                response.body()?.let { body ->
-                    dataResponse.addAll(body)
-                    dataAll.postValue(dataResponse.map { dataResponse ->
-                        NewMessage(
-                            dataResponse.content,
-                            dataResponse.id,
-                            dataResponse.lastUpdated,
-                            dataResponse.messageType,
-//                            dataResponse.messages,
-                            dataResponse.receiverName,
-                            dataResponse.senderName,
-                            dataResponse.sendDate,
-                            dataResponse.status,
-                            dataResponse.title
-                        )
-                    } as ArrayList<NewMessage?>)
+        Log.e("toantoken", MySharedPreferences.getInstance(requireContext()).getToken())
+        api.getMessage(MySharedPreferences.getInstance(requireContext()).getToken())
+            .enqueue(object : Callback<List<NewMessage>> {
+                override fun onFailure(call: Call<List<NewMessage>>, t: Throwable) {
+                    Log.e("toan", t.message.toString())
 
                 }
-            }
 
-        })
+                override fun onResponse(
+                    call: Call<List<NewMessage>>,
+                    response: Response<List<NewMessage>>
+                ) {
+                    response.body()?.let { body ->
+                        dataResponse.addAll(body)
+                        dataMessage.postValue(dataResponse.map { dataResponse ->
+                            NewMessage(
+                                dataResponse.content,
+                                dataResponse.id,
+                                dataResponse.lastUpdated,
+                                dataResponse.messageType,
+//                            dataResponse.messages,
+                                dataResponse.receiverName,
+                                dataResponse.senderName,
+                                MySharedPreferences.getInstance(requireContext()).getDate(
+                                    dataResponse.sendDate.toLong()
+                                ),
+                                dataResponse.status,
+                                dataResponse.title
+                            )
+                        } as ArrayList<NewMessage?>)
+
+                    }
+                }
+
+            })
     }
 
 
     override fun onMessageClick(message: NewMessage) {
         message.id?.let { MySharedPreferences.getInstance(requireContext()).setIdMessage(it) }
-        Log.e("id",MySharedPreferences.getInstance(requireContext()).getIdMessage())
+        Log.e("id", MySharedPreferences.getInstance(requireContext()).getIdMessage())
         clickMessage()
         var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setTitle(message.title)
         builder.setMessage(message.content)
-        builder.setNeutralButton("Ok"){_,_ ->
+        builder.setNeutralButton("Ok") { _, _ ->
             seenMessage()
-            dataAll.observe(this, Observer {
+            dataMessage.observe(this, Observer {
                 it.remove(message)
                 newMessageAdapter.notifyDataSetChanged()
             })
@@ -135,12 +225,14 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
     }
 
     private fun seenMessage() {
-        Log.e("toan1","message/"+MySharedPreferences.getInstance(requireContext()).getIdMessage()+"/seen")
-        Log.e("toan2",MySharedPreferences.getInstance(requireContext()).getToken())
-        api.seenMessage("message/"+MySharedPreferences.getInstance(requireContext()).getIdMessage()+"/seen",MySharedPreferences.getInstance(requireContext()).getToken())
-            .enqueue(object : Callback<NewMessage>{
+
+        api.seenMessage(
+            "message/" + MySharedPreferences.getInstance(requireContext()).getIdMessage() + "/seen",
+            MySharedPreferences.getInstance(requireContext()).getToken()
+        )
+            .enqueue(object : Callback<NewMessage> {
                 override fun onFailure(call: Call<NewMessage>, t: Throwable) {
-                    Log.e("seen",t.message)
+                    Log.e("seen", t.message)
                 }
 
                 override fun onResponse(call: Call<NewMessage>, response: Response<NewMessage>) {
@@ -152,10 +244,13 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
     }
 
     private fun clickMessage() {
-        api.clickMessage("message/"+MySharedPreferences.getInstance(requireContext()).getIdMessage()+"/seen",MySharedPreferences.getInstance(requireContext()).getToken())
-            .enqueue(object : Callback<NewMessage>{
+        api.clickMessage(
+            "message/" + MySharedPreferences.getInstance(requireContext()).getIdMessage() + "/seen",
+            MySharedPreferences.getInstance(requireContext()).getToken()
+        )
+            .enqueue(object : Callback<NewMessage> {
                 override fun onFailure(call: Call<NewMessage>, t: Throwable) {
-                    Log.e("Click",t.message)
+                    Log.e("Click", t.message)
                 }
 
                 override fun onResponse(call: Call<NewMessage>, response: Response<NewMessage>) {
@@ -165,7 +260,6 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage {
             })
 
     }
-
 
 
     override fun onCreateView(

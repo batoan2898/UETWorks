@@ -1,7 +1,5 @@
 package com.uet.uetworks.ui.main
 
-import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -10,15 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
-import com.uet.uetworks.api.Api
-import com.uet.uetworks.api.ApiBuilder
-import com.uet.uetworks.model.StudentInfo
-import com.uet.uetworks.model.User
 import com.uet.uetworks.ui.LoginActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class ProfileFragment : Fragment() {
     override fun onCreateView(

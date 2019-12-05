@@ -9,7 +9,7 @@ data class Student(
     @SerializedName("email") var email: String,
     @SerializedName("fullName") var fullName: String,
     @SerializedName("id") var id: Int,
-    @SerializedName("lecturers") var lecturers: String,
+    @SerializedName("lecturers") var lecturers: Lecturers,
     @SerializedName("phoneNumber") var phoneNumber: String,
     @SerializedName("skype") var skype: String,
     @SerializedName("studentName") var studentName: String,

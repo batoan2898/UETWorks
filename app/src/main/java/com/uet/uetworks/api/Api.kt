@@ -3,9 +3,7 @@ package com.uet.uetworks.api
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
 import com.uet.uetworks.MySharedPreferences
-import com.uet.uetworks.model.EmailVNU
-import com.uet.uetworks.model.NewMessage
-import com.uet.uetworks.model.User
+import com.uet.uetworks.model.*
 import retrofit2.Call
 import retrofit2.http.*
 import roboguice.util.SafeAsyncTask.Task
@@ -73,8 +71,18 @@ interface Api {
         @Query("page")  page: Int,
         @Query("size")  size: Int,
         @Header("auth-token") token: String
-    )
+    ): Call<Post>
 
+    @SuppressLint("SupportAnnotationUsage")
+    @GET
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json")
+    @RawRes
+    fun getPostDetail(
+        @Url url:String,
+        @Header("auth-token") token: String
+    ): Call<Content>
 
 }
 
