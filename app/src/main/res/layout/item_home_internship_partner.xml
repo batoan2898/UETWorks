@@ -9,13 +9,7 @@
     android:paddingTop="10dp"
     tools:ignore="MissingConstraints">
 
-    <ImageView
-        android:id="@+id/imThumb"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:scaleType="center"
-        android:src="@mipmap/ic_launcher" />
+
 
     <LinearLayout
         android:layout_width="0dp"

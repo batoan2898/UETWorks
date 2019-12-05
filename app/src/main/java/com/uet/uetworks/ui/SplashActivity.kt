@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import com.github.ybq.android.spinkit.sprite.Sprite
 import com.github.ybq.android.spinkit.style.Wave
 import com.uet.uetworks.MySharedPreferences
@@ -15,7 +16,7 @@ class SplashActivity : AppCompatActivity() {
     private var handler: Handler = Handler()
     private val runnable = Runnable {
         handler.postDelayed({
-            if (MySharedPreferences.checkLogin()) {
+            if (MySharedPreferences.getInstance(this).checkLogin()) {
                 startActivity(Intent(this@SplashActivity, MainActivity::class.java))
                 finish()
             } else {

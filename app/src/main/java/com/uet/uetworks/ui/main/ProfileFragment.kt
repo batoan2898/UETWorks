@@ -35,8 +35,8 @@ class ProfileFragment : Fragment() {
     }
     private fun setUpView() {
         btn_logout.setOnClickListener {
-            MySharedPreferences.setLogin(isLogin = false)
-            MySharedPreferences.setToken("")
+            MySharedPreferences.getInstance(requireContext()).setLogin(isLogin = false)
+            MySharedPreferences.getInstance(requireContext()).setToken("")
             requireActivity().startActivity(Intent(requireActivity(), LoginActivity::class.java))
             requireActivity().finish()
         }

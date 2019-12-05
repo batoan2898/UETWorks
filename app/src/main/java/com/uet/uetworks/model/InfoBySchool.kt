@@ -1,39 +1,17 @@
 package com.uet.uetworks.model
 
-class InfoBySchool {
-    var diploma: String? = null
-    var emailvnu: String? = null
-    var gpa: Double = 0.toDouble()
-    var grade: String? = null
-    var graduationYear: String? = null
-    var id: Int = 0
-    var major: String? = null
-    var studentClass: String? = null
-    var studentCode: Int = 0
-    var studentName: String? = null
+import com.google.gson.annotations.SerializedName
 
-    constructor() {}
-    constructor(
-        diploma: String,
-        emailvnu: String,
-        gpa: Double,
-        grade: String,
-        graduationYear: String,
-        id: Int,
-        major: String,
-        studentClass: String,
-        studentCode: Int,
-        studentName: String
-    ) {
-        this.diploma = diploma
-        this.emailvnu = emailvnu
-        this.gpa = gpa
-        this.grade = grade
-        this.graduationYear = graduationYear
-        this.id = id
-        this.major = major
-        this.studentClass = studentClass
-        this.studentCode = studentCode
-        this.studentName = studentName
-    }
-}
+data class InfoBySchool(
+    @SerializedName("diploma") var diploma: String?,
+    @SerializedName("emailvnu") var emailvnu: String?,
+    @SerializedName("gpa") var gpa: Double?,
+    @SerializedName("grade") var grade: String?,
+    @SerializedName("graduationYear") var graduationYear: String?,
+    @SerializedName("id") var id: Int?,
+    @SerializedName("major") var major: String?,
+    @SerializedName("studentClass") var studentClass: String?,
+    @SerializedName("studentCode") var studentCode: Int?,
+    @SerializedName("studentName") var studentName: String?
+)
+

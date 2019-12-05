@@ -32,6 +32,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+
         api = ApiBuilder.client?.create(Api::class.java)!!
         btnLogin.setOnClickListener {
             if (checkLogin()) {
@@ -72,6 +73,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
     override fun onResponse(call: Call<User>, response: Response<User>) {
         if (response.code() == 200) {
             token = response.body()?.token
+            Log.e("toan",token.toString())
             id = response.body()?.id
             role = response.body()?.role
             infoBySchoolId = response.body()?.infoBySchool
@@ -80,8 +82,9 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-            MySharedPreferences.setToken(token)
-            MySharedPreferences.setLogin(isLogin = true)
+            MySharedPreferences.getInstance(this).setToken(token = token!!)
+
+            MySharedPreferences.getInstance(this).setLogin(isLogin = true)
         } else {
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
         }
