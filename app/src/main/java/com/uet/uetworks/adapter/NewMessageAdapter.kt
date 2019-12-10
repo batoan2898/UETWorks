@@ -14,13 +14,15 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class NewMessageAdapter (context: Context?, private val onClickListener: OnClickMessage) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class NewMessageAdapter(context: Context?, private val onClickListener: OnClickMessage) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return NewMessageHolder(inflater.inflate(R.layout.item_notification, parent, false))
     }
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
-    private var data: ArrayList<NewMessage?>? =null
+    private var data: ArrayList<NewMessage?>? = null
 
 
     fun setData(data: java.util.ArrayList<NewMessage?>) {
@@ -29,7 +31,7 @@ class NewMessageAdapter (context: Context?, private val onClickListener: OnClick
     }
 
     override fun getItemCount(): Int {
-        return data?.size ?:0
+        return data?.size ?: 0
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -62,7 +64,6 @@ class NewMessageAdapter (context: Context?, private val onClickListener: OnClick
         }
 
     }
-
 
 
     interface OnClickMessage {

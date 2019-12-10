@@ -1,10 +1,6 @@
 package com.uet.uetworks.model
 
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
-import java.util.*
-import kotlin.collections.ArrayList
-
 
 data class NewMessage(
     @SerializedName("content") var content: String?,
