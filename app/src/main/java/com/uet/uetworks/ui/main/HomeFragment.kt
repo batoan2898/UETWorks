@@ -29,7 +29,6 @@ import com.uet.uetworks.model.Post
 import kotlin.collections.ArrayList
 import com.uet.uetworks.ui.PostDetailFragment
 
-
 @Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.OnClickPost {
 
@@ -82,10 +81,13 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
         api.getPost(0, 100, MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<Post> {
                 override fun onFailure(call: Call<Post>, t: Throwable) {
-                    Log.e("getpost", t.message)
+                    Log.e("getPost", t.message)
                 }
 
-                override fun onResponse(call: Call<Post>, response: Response<Post>) {
+                override fun onResponse(
+                    call: Call<Post>,
+                    response: Response<Post>
+                ) {
                     progressBar.visibility = View.GONE
 
                     Log.e("codePost", response.code().toString())
@@ -94,7 +96,6 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
                         totalPage = body.totalPage
                         Log.e("page", lastPage.toString())
                         dataPostResponse.addAll(body.listContent)
-
                         dataPost.postValue(dataPostResponse.map { dataPostResponse ->
                             Content(
                                 dataPostResponse.contentPost,
@@ -114,7 +115,6 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
                                 dataPostResponse.title
                             )
                         } as ArrayList<Content?>)
-
                     }
                 }
             })
@@ -137,18 +137,22 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
     override fun onPostClick(content: Content) {
         val postDetailFragment = PostDetailFragment()
         val bundle = Bundle()
-        bundle.putSerializable("object",content)
+        bundle.putSerializable("object", content)
         postDetailFragment.arguments = bundle
 
-        var partnerDTO = PartnerDTO(132,null,null,null)
-        api.checkFollowId("post/" + 132+ "/checkFollow",MySharedPreferences.getInstance(requireContext()).getToken(),partnerDTO)
-            .enqueue(object : Callback<PartnerDTO>{
+        var partnerDTO = PartnerDTO(132, null, null, null)
+        api.checkFollowId(
+            "post/" + 132 + "/checkFollow",
+            MySharedPreferences.getInstance(requireContext()).getToken(),
+            partnerDTO
+        )
+            .enqueue(object : Callback<PartnerDTO> {
                 override fun onFailure(call: Call<PartnerDTO>, t: Throwable) {
-                    Log.e("checkfollow",t.message)
+                    Log.e("checkfollow", t.message)
                 }
 
                 override fun onResponse(call: Call<PartnerDTO>, response: Response<PartnerDTO>) {
-                    Log.e("postFollow",response.body().toString())
+                    Log.e("postFollow", response.body().toString())
 
                 }
 
@@ -158,7 +162,6 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
             .replace((view!!.parent as ViewGroup).id, postDetailFragment, "findThisFragment")
             .addToBackStack(null)
             .commit()
-
 
 
     }

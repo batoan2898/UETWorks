@@ -1,39 +1,63 @@
 package com.uet.uetworks.adapter
 
-
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.uet.uetworks.R
-import com.uet.uetworks.model.Notification
+import com.uet.uetworks.model.NotificationDetail
+import kotlinx.android.synthetic.main.item_notification.view.*
 
-class NotificationAdapter(val notificationList: ArrayList<Notification>) :
-    RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.item_notification,
-                parent,
-                false
-            )
-        )
+class NotificationAdapter(
+    context: Context?,
+    private val onClickListener: OnClickNotification
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
+    private var data: ArrayList<NotificationDetail?>? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return NotificationHolder(inflater.inflate(R.layout.item_notification, parent, false))
+    }
+
+    fun setData(data: java.util.ArrayList<NotificationDetail?>) {
+        this.data = data
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {
-        return notificationList.size
+        return data?.size ?: 0
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val notification: Notification = notificationList[position]
-        holder.tvNotificationTitle.text = notification.notificationTitle
-        holder.tvNotificationDetail.text = notification.notificationDetail
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val notificationDetail = this.data?.get(position)
+        if (holder is NotificationHolder) {
+            showNotification(holder, position)
+        }
+        if (onClickListener != null) {
+            holder.itemView.setOnClickListener {
+                if (notificationDetail != null) {
+                    onClickListener.onNotificationClick(notificationDetail)
+                }
+            }
+        }
     }
 
+    private fun showNotification(holder: NotificationHolder, position: Int) {
+        val item = data?.get(position)
+        item?.let { holder.bindData(it) }
+    }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvNotificationTitle = itemView.findViewById(R.id.tvMessageTitle) as TextView
-        val tvNotificationDetail = itemView.findViewById(R.id.tvMessageContent) as TextView
+    open class NotificationHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bindData(notificationDetail: NotificationDetail) {
+            itemView.tvMessageTitle.text = notificationDetail.title
+            itemView.tvSendDate.text = notificationDetail.sendDate
+            itemView.tvSenderName.text = notificationDetail.senderName
+        }
+    }
+
+    interface OnClickNotification {
+        fun onNotificationClick(notificationDetail: NotificationDetail)
     }
 }

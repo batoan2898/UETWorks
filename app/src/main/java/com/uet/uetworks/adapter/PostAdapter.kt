@@ -4,33 +4,27 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
-import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
 import com.uet.uetworks.model.Content
 import kotlinx.android.synthetic.main.item_home_internship_partner.view.*
-import kotlin.collections.ArrayList
 
-
-class PostAdapter(context: Context?, private val onClickListener: OnClickPost) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
+class PostAdapter(
+    context: Context?,
+    private val onClickListener: OnClickPost
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var data: ArrayList<Content?>? = null
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return PostHolder(inflater.inflate(R.layout.item_home_internship_partner, parent, false))
     }
 
-
     fun setData(data: java.util.ArrayList<Content?>) {
         this.data = data
         notifyDataSetChanged()
     }
-
 
     override fun getItemCount(): Int {
         return data?.size ?: 0

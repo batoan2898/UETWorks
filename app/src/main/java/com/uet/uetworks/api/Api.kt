@@ -10,8 +10,6 @@ import roboguice.util.SafeAsyncTask.Task
 import retrofit2.http.Url
 
 
-
-
 interface Api {
     @SuppressLint("SupportAnnotationUsage")
     @POST("/login")
@@ -25,7 +23,6 @@ interface Api {
     @RawRes
     fun resetPass(@Body email: EmailVNU): Call<EmailVNU>
 
-
     @SuppressLint("SupportAnnotationUsage")
     @GET("/message/new")
     @Headers(
@@ -35,16 +32,15 @@ interface Api {
     @RawRes
     fun getMessage(@Header("auth-token") token: String): Call<List<NewMessage>>
 
-
-
     @SuppressLint("SupportAnnotationUsage")
     @PUT
     @Headers(
         "Content-Type: application/json",
-        "Accept: application/json")
+        "Accept: application/json"
+    )
     @RawRes
     fun seenMessage(
-        @Url url: String ,
+        @Url url: String,
         @Header("auth-token") token: String
     ): Call<NewMessage>
 
@@ -52,13 +48,13 @@ interface Api {
     @OPTIONS
     @Headers(
         "Content-Type: application/json",
-        "Accept: application/json")
+        "Accept: application/json"
+    )
     @RawRes
     fun clickMessage(
-        @Url url: String ,
+        @Url url: String,
         @Header("auth-token") token: String
     ): Call<NewMessage>
-
 
     @SuppressLint("SupportAnnotationUsage")
     @GET("/post/postType/Recruitment")
@@ -68,20 +64,45 @@ interface Api {
         "Accept: application/json"
     )
     fun getPost(
-        @Query("page")  page: Int,
-        @Query("size")  size: Int,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
         @Header("auth-token") token: String
     ): Call<Post>
 
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/message")
+    @RawRes
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    fun getNotification(
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Header("auth-token") token: String
+    ): Call<Notification>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @OPTIONS
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    @RawRes
+    fun clickNotification(
+        @Url url: String,
+        @Header("auth-token") token: String
+    ): Call<NotificationDetail>
 
     @SuppressLint("SupportAnnotationUsage")
     @GET
     @Headers(
         "Content-Type: application/json",
-        "Accept: application/json")
+        "Accept: application/json"
+    )
     @RawRes
     fun getPostDetail(
-        @Url url:String,
+        @Url url: String,
         @Header("auth-token") token: String
     ): Call<Content>
 
@@ -90,9 +111,10 @@ interface Api {
     @PUT
     @Headers(
         "Content-Type: application/json",
-        "Accept: application/json")
+        "Accept: application/json"
+    )
     fun checkFollowId(
-        @Url url:String,
+        @Url url: String,
         @Header("auth-token") token: String,
         @Body partnerDTO: PartnerDTO
     ): Call<PartnerDTO>
@@ -102,40 +124,43 @@ interface Api {
     @GET("/internship")
     @Headers(
         "Content-Type: application/json",
-        "Accept: application/json")
+        "Accept: application/json"
+    )
     fun getInternship(
         @Header("auth-token") token: String
-    ) : Call<Internship>
+    ): Call<Internship>
 
 
     @SuppressLint("SupportAnnotationUsage")
     @PUT("/internship")
     @Headers(
         "Content-Type: application/json",
-        "Accept: application/json")
+        "Accept: application/json"
+    )
     fun putInternship(
         @Header("auth-token") token: String
-    ) : Call<Internship>
+    ): Call<Internship>
 
 
     @SuppressLint("SupportAnnotationUsage")
     @GET("/partnerId/name/fit")
     @Headers(
         "Content-Type: application/json",
-        "Accept: application/json")
+        "Accept: application/json"
+    )
     fun getFit(
         @Header("auth-token") token: String
-    ) : Call<PartnerFitOther>
+    ): Call<PartnerFitOther>
 
     @SuppressLint("SupportAnnotationUsage")
     @GET("/partnerId/name/other")
     @Headers(
         "Content-Type: application/json",
-        "Accept: application/json")
+        "Accept: application/json"
+    )
     fun getOther(
         @Header("auth-token") token: String
-    ) : Call<PartnerFitOther>
-
+    ): Call<PartnerFitOther>
 }
 
 
