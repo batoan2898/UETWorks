@@ -73,6 +73,7 @@ interface Api {
         @Header("auth-token") token: String
     ): Call<Post>
 
+
     @SuppressLint("SupportAnnotationUsage")
     @GET
     @Headers(
@@ -83,6 +84,57 @@ interface Api {
         @Url url:String,
         @Header("auth-token") token: String
     ): Call<Content>
+
+
+    @SuppressLint("SupportAnnotationUsage")
+    @PUT
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json")
+    fun checkFollowId(
+        @Url url:String,
+        @Header("auth-token") token: String,
+        @Body partnerDTO: PartnerDTO
+    ): Call<PartnerDTO>
+
+
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/internship")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json")
+    fun getInternship(
+        @Header("auth-token") token: String
+    ) : Call<Internship>
+
+
+    @SuppressLint("SupportAnnotationUsage")
+    @PUT("/internship")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json")
+    fun putInternship(
+        @Header("auth-token") token: String
+    ) : Call<Internship>
+
+
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/partnerId/name/fit")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json")
+    fun getFit(
+        @Header("auth-token") token: String
+    ) : Call<PartnerFitOther>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/partnerId/name/other")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json")
+    fun getOther(
+        @Header("auth-token") token: String
+    ) : Call<PartnerFitOther>
 
 }
 

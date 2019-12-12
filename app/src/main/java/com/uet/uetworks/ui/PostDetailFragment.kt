@@ -12,8 +12,7 @@ import kotlinx.android.synthetic.main.fragment_post_detail.*
 
 
 class PostDetailFragment : Fragment() {
-    var bundle: Bundle? = this.arguments
-    var content = bundle?.getSerializable("content") as Content
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,19 +26,23 @@ class PostDetailFragment : Fragment() {
 
         initView()
 
-
     }
 
     private fun initView() {
-
+        var bundle: Bundle? = this.arguments
+        var content = bundle?.getSerializable("object") as Content
         tvDetailTitle.text = content.title
         tvDetailDatePost.text = "Ngày đăng: " + content.datePost
         tvDetailExpiryTime.text = "Ngày hết hạn: " + content.expiryTime
         tvDetailRequiredNumber.text = "Số lượng cần tuyển: " + content.requiredNumber
-        tvDetailPartnerContactName.text = "Tên liên lạc: " + content.partnerContact?.phone
-        tvDetailPartnerContactPhone.text = "Số điện thoại: " + content.partnerContact?.contactName
+        tvDetailPartnerContactName.text = "Tên liên lạc: " + content.partnerContact?.contactName
+        tvDetailPartnerContactPhone.text = "Số điện thoại: " + content.partnerContact?.phone
         tvDetailPartnerContactMail.text = "Email: " + content.partnerContact?.email
 
+        var id = bundle?.getString("id")
+        if (id != null){
+            btnFollowPartner.setText("Hủy đăng ký")
+        }
 
     }
 
