@@ -2,10 +2,8 @@ package com.uet.uetworks.api
 
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
-import com.uet.uetworks.model.EmailVNU
-import com.uet.uetworks.model.NewMessage
-import com.uet.uetworks.model.Student
-import com.uet.uetworks.model.User
+import com.squareup.okhttp.RequestBody
+import com.uet.uetworks.model.*
 import retrofit2.Call
 import retrofit2.http.*
 import retrofit2.http.Url
@@ -84,6 +82,29 @@ interface Api {
         @Header("auth-token") token: String
     ): Call<Student>
 
+    @SuppressLint("SupportAnnotationUsage")
+    @PUT("/studentInfo")
+    @RawRes
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    fun updateStudentInfo(
+        @Header("auth-token") token: String,
+        @Body student: Student
+    ): Call<Student>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @PUT("/changePassword")
+    @RawRes
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    fun changePass(
+        @Header("auth-token") token: String,
+        @Body changePassRequest: ChangePassRequest
+    ): Call<ChangePassResponse>
 }
 
 
