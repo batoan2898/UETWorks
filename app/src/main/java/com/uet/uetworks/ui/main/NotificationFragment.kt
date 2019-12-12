@@ -1,6 +1,7 @@
 package com.uet.uetworks.ui.main
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,84 +17,90 @@ import com.uet.uetworks.adapter.NotificationAdapter
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.Notification
+import com.uet.uetworks.model.NotificationDetail
 import kotlinx.android.synthetic.main.fragment_notification.*
+import kotlinx.android.synthetic.main.item_notification.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 @Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class NotificationFragment : Fragment(), NotificationAdapter.onClickNotification {
-    private var dataAll = MutableLiveData<java.util.ArrayList<Notification?>>()
-    private var dataResponse: ArrayList<Notification> = arrayListOf()
+class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification {
+
     private lateinit var notificationAdapter: NotificationAdapter
+    private var dataNotification = MutableLiveData<ArrayList<NotificationDetail?>>()
+    private var dataNotificationResponse: ArrayList<NotificationDetail> = arrayListOf()
     lateinit var api: Api
+    var totalPages: Int = 0
+    private var last: Boolean = true
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val manager = LinearLayoutManager(requireContext())
         recyclerNotificationFragment.layoutManager = manager
-        recyclerNotificationFragment.setHasFixedSize(false)
         notificationAdapter = NotificationAdapter(context, this)
         recyclerNotificationFragment.adapter = notificationAdapter
-        getDataNotification()
-        Log.e("token", MySharedPreferences.getInstance(requireContext()).getToken())
-        Log.e("message", MySharedPreferences.getInstance(requireContext()).getIdMessage())
         initView()
     }
 
     private fun initView() {
-        dataAll.observe(this, Observer {
+        dataNotification.observe(this, Observer {
             notificationAdapter.setData(it)
         })
-        recyclerNotificationFragment.visibility = View.VISIBLE
+        if (dataNotificationResponse.isEmpty()) {
+            getNotification()
+        }
     }
 
-    private fun getDataNotification() {
+    private fun getNotification() {
         api = ApiBuilder.client?.create(Api::class.java)!!
-        Log.e("toantoken", MySharedPreferences.getInstance(requireContext()).getToken())
-        api.getNotification(0, 100, MySharedPreferences.getInstance(requireContext()).getToken())
-            .enqueue(object : Callback<List<Notification>> {
-                override fun onFailure(call: Call<List<Notification>>, t: Throwable) {
-                    Log.e("toan", t.message.toString())
+        api.getNotification(0, 55, MySharedPreferences.getInstance(requireContext()).getToken())
+            .enqueue(object : Callback<Notification> {
+                override fun onFailure(call: Call<Notification>, t: Throwable) {
+                    Log.e("getNotification", t.message)
                 }
 
                 override fun onResponse(
-                    call: Call<List<Notification>>,
-                    response: Response<List<Notification>>
+                    call: Call<Notification>,
+                    response: Response<Notification>
                 ) {
+                    Log.e("codeNotification", response.code().toString())
                     response.body()?.let { body ->
-                        dataResponse.addAll(body)
-                        dataAll.postValue(dataResponse.map { dataResponse ->
-                            Notification(
-                                dataResponse.id,
-                                dataResponse.title,
-                                dataResponse.content,
-                                dataResponse.senderName,
-                                dataResponse.sendDate,
-                                dataResponse.messageType,
-                                dataResponse.status,
-                                dataResponse.receiverName,
-                                dataResponse.lastUpdated
+                        last = body.last
+                        totalPages = body.totalPages
+                        Log.e("page", last.toString())
+                        dataNotificationResponse.addAll(body.listContent)
+                        dataNotification.postValue(dataNotificationResponse.map { dataNotificationResponse ->
+                            NotificationDetail(
+                                dataNotificationResponse.id,
+                                dataNotificationResponse.title,
+                                dataNotificationResponse.content,
+                                dataNotificationResponse.senderName,
+                                MySharedPreferences.getInstance(requireContext())
+                                    .getDate(dataNotificationResponse.sendDate.toLong()),
+                                dataNotificationResponse.messageType,
+                                dataNotificationResponse.status,
+                                dataNotificationResponse.receiverName,
+                                MySharedPreferences.getInstance(requireContext())
+                                    .getDate(dataNotificationResponse.lastUpdated.toLong())
                             )
-                        } as ArrayList<Notification?>)
+                        } as ArrayList<NotificationDetail?>)
                     }
                 }
             })
     }
 
-    override fun onNotificationClick(notification: Notification) {
-        notification.id?.let {
+    override fun onNotificationClick(notificationDetail: NotificationDetail) {
+        notificationDetail.id?.let {
             MySharedPreferences.getInstance(requireContext()).setIdMessage(it)
         }
-        Log.e("id", MySharedPreferences.getInstance(requireContext()).getIdMessage())
         clickNotification()
         var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
-        builder.setTitle(notification.title)
-        builder.setMessage(notification.content)
+        builder.setTitle(notificationDetail.title)
+        builder.setMessage(notificationDetail.content.replace("<br />","\n"))
         builder.setNeutralButton("OK") { _, _ ->
-            seenNotification()
-            dataAll.observe(this, Observer {
-                it.remove(notification)
+            dataNotification.observe(this, Observer {
+                it.remove(notificationDetail)
                 notificationAdapter.notifyDataSetChanged()
             })
         }
@@ -101,60 +108,30 @@ class NotificationFragment : Fragment(), NotificationAdapter.onClickNotification
         dialog.show()
     }
 
-    private fun seenNotification() {
-        Log.e(
-            "toan1",
-            "message/" + MySharedPreferences.getInstance(requireContext()).getIdMessage() + "/seen"
-        )
-        Log.e("toan2", MySharedPreferences.getInstance(requireContext()).getToken())
-        api.seenNotification(
-            "message/" + MySharedPreferences.getInstance(requireContext()).getIdMessage() + "/seen",
-            MySharedPreferences.getInstance(requireContext()).getToken()
-        )
-            .enqueue(object : Callback<Notification> {
-                override fun onFailure(
-                    call: Call<Notification>,
-                    t: Throwable
-                ) {
-                    Log.e("seen", t.message)
-                }
-
-                override fun onResponse(
-                    call: Call<Notification>,
-                    response: Response<Notification>
-                ) {
-                    Log.e("codeSeen", response.code().toString())
-                }
-            })
-    }
-
     private fun clickNotification() {
         api.clickNotification(
             "message/" + MySharedPreferences.getInstance(requireContext()).getIdMessage() + "/seen",
             MySharedPreferences.getInstance(requireContext()).getToken()
-        )
-            .enqueue(object : Callback<Notification> {
-                override fun onFailure(
-                    call: Call<Notification>,
-                    t: Throwable
-                ) {
-                    Log.e("Click", t.message)
-                }
+        ).enqueue(object : Callback<NotificationDetail> {
+            override fun onFailure(call: Call<NotificationDetail>, t: Throwable) {
+                Log.e("click", t.message)
+            }
 
-                override fun onResponse(
-                    call: Call<Notification>,
-                    response: Response<Notification>
-                ) {
-                    Log.e("codeClickSeen", response.code().toString())
-                }
-            })
+            override fun onResponse(
+                call: Call<NotificationDetail>,
+                response: Response<NotificationDetail>
+            ) {
+                Log.e("codeClickSeen", response.code().toString())
+            }
+        })
     }
 
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notification, container, false)
     }
 
