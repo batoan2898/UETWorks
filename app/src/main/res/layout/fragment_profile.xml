@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:id="@+id/profle_frag"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
@@ -33,6 +34,7 @@
         </TextView>
         <Button android:layout_height="35dp"
             android:text="@string/update"
+            android:id="@+id/btn_update"
             android:textColor="@color/colorWhite"
             android:background="@drawable/button_rounded_corners"
             android:layout_weight="0.25"
@@ -123,14 +125,28 @@
                     android:textSize="16sp"
                     android:text="@string/dob"/>
 
-                <EditText
-                    android:id="@+id/et_dob_input"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_input"
-                    android:textSize="15sp"
-                    android:padding="7dp"
-                    android:hint="dd/mm/yyyy"/>
+                    android:orientation="horizontal">
+                    <EditText
+                        android:id="@+id/et_dob_input"
+                        android:layout_width="0dp"
+                        android:layout_weight="0.7"
+                        android:layout_height="wrap_content"
+                        android:background="#0000"
+                        android:textSize="15sp"
+                        android:padding="7dp"
+                        android:hint="dd/mm/yyyy"/>
+                    <ImageView android:layout_width="0dp"
+                        android:layout_weight="0.2"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_date"
+                        android:id="@+id/iv_pick_date"
+                        android:layout_height="30dp"/>
+                </LinearLayout>
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
