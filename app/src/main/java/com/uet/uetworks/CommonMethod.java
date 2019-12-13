@@ -1,4 +1,4 @@
-package com.uet.uetworks.ui;
+package com.uet.uetworks;
 
 import android.app.Activity;
 import android.app.AlertDialog;

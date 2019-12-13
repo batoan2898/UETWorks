@@ -40,6 +40,8 @@ import java.lang.Double.parseDouble
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import com.uet.uetworks.ui.LoginActivity
+import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
     lateinit var api: Api
