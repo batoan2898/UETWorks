@@ -13,10 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.okhttp.MediaType
@@ -40,8 +37,16 @@ import java.lang.Double.parseDouble
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
+    }
+
     lateinit var api: Api
     private lateinit var dataResponse: Student
     private lateinit var dataRequest: Student
@@ -50,6 +55,12 @@ class ProfileFragment : Fragment() {
 
     var token: String? = null
     var myDialog: Dialog? = null
+    var spinner: Spinner? = null
+//    var numbergrade= listOf<Int>()
+//    var schoolyear_list= listOf<String>()
+    var schoolyear_list:ArrayList<String> = ArrayList()
+    var spinner2: Spinner? = null
+    var major_list = arrayOf("N", "CA", "CAC", "CA-CLC", "CB", "CC", "CD", "CLC -CNTT", "T", "ĐA", "ĐB", "ĐA-CLC", "E", "V", "M", "H", "CE", "J")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,6 +77,22 @@ class ProfileFragment : Fragment() {
         getInfoUser()
         Log.e("token", MySharedPreferences.getInstance(requireContext()).getToken())
         setUpView()
+
+        //class spinner
+        for (grade in 1..1000){
+            schoolyear_list[grade]=grade.toString()
+        }
+        spinner = this.sp_grade
+        spinner!!.setOnItemSelectedListener(this)
+        val aa = ArrayAdapter(this.requireContext(), android.R.layout.simple_spinner_item, schoolyear_list)
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner!!.setAdapter(aa)
+
+        spinner2 = this.sp_major
+        spinner2!!.setOnItemSelectedListener(this)
+        val bb = ArrayAdapter(this.requireContext(), android.R.layout.simple_spinner_item, major_list)
+        bb.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner2!!.setAdapter(bb)
     }
 
     private fun setUpView() {
@@ -133,7 +160,8 @@ class ProfileFragment : Fragment() {
                     et_email_input.setText(dataResponse.email)
                     et_phone_input.setText(dataResponse.phoneNumber)
                     et_skype_input.setText(dataResponse.skype)
-                    et_class_input.setText(dataResponse.infoBySchool.studentClass)
+                    sp_grade.prompt = dataResponse.infoBySchool.graduationYear
+                    sp_major.prompt = dataResponse.infoBySchool.major
                     et_skill_input.setText(dataResponse.infoBySchool.major)
                     et_foreignlg_input.setText("")
                     et_hobby_input.setText(dataResponse.desire)
@@ -156,8 +184,9 @@ class ProfileFragment : Fragment() {
         var phoneNumber = et_phone_input.text
         var skype = et_skype_input.text
         var favor = et_hobby_input.text
-        var grade = et_class_input.text
-        var major = et_skill_input.text
+        var grade = sp_grade.setSelection(sp_grade.selectedItemPosition)
+        var major = sp_major.setSelection(sp_major.selectedItemPosition)
+        var skill = et_skill_input.text
         var language = et_foreignlg_input.text
         if(validDateandPhone(birthday.toString().trim(), phoneNumber.toString().trim())){
             dataRequest.fullName = fullName.toString()
