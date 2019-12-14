@@ -60,7 +60,7 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
 //    var schoolyear_list= listOf<String>()
     var schoolyear_list:ArrayList<String> = ArrayList()
     var spinner2: Spinner? = null
-    var major_list = arrayOf("N", "CA", "CAC", "CA-CLC", "CB", "CC", "CD", "CLC -CNTT", "T", "ĐA", "ĐB", "ĐA-CLC", "E", "V", "M", "H", "CE", "J")
+    var major_list = arrayOf("N", "CA", "CAC", "CA-CLC", "CB", "CC", "CD", "CLC - CNTT", "T", "ĐA", "ĐB", "ĐA-CLC", "E", "V", "M", "H", "CE", "J")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
