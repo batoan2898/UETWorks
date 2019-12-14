@@ -1,7 +1,8 @@
 package com.uet.uetworks.model
 
 import com.google.gson.annotations.SerializedName
-import java.util.ArrayList
+import java.io.Serializable
+import java.util.*
 
 data class Post(
     @SerializedName("content") var listContent: ArrayList<Content> = arrayListOf(),
@@ -15,17 +16,18 @@ data class Post(
 )
 
 data class Content(
-    @SerializedName("content") var  contentPost: String,
+    @SerializedName("content") var contentPost: String,
     @SerializedName("datePost") var datePost: String,
     @SerializedName("expiryTime") var expiryTime: String,
     @SerializedName("follows") var listFollows: ArrayList<Follows> = arrayListOf(),
     @SerializedName("id") var idPost: Int,
-    @SerializedName("partnerName") var partnerNAme: String,
+    @SerializedName("partnerContact") var partnerContact: PartnerContact?,
+    @SerializedName("partnerName") var partnerName: String,
     @SerializedName("postType") var postType: String,
     @SerializedName("requiredNumber") var requiredNumber: Int,
     @SerializedName("status") var status: String,
     @SerializedName("title") var title: String
-)
+) : Serializable
 
 
 
