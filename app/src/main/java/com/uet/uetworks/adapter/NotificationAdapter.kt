@@ -1,6 +1,7 @@
 package com.uet.uetworks.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,11 +36,15 @@ class NotificationAdapter(
         if (holder is NotificationHolder) {
             showNotification(holder, position)
         }
-        if (onClickListener != null) {
-            holder.itemView.setOnClickListener {
-                if (notificationDetail != null) {
-                    onClickListener.onNotificationClick(notificationDetail)
-                }
+        holder.itemView.setBackgroundColor(Color.parseColor("#DBDBDB"))
+        if (!notificationDetail?.status?.equals("SEEN")!!){
+            holder.itemView.tvMessageTitle.setTextColor(Color.parseColor("#1977F3"))
+            holder.itemView.tvSendDate.setTextColor(Color.parseColor("#1977F3"))
+            holder.itemView.tvSenderName.setTextColor(Color.parseColor("#1977F3"))
+        }
+        holder.itemView.setOnClickListener {
+            if (notificationDetail != null) {
+                onClickListener.onNotificationClick(notificationDetail)
             }
         }
     }

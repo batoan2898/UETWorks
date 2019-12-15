@@ -95,6 +95,18 @@ interface Api {
     ): Call<NotificationDetail>
 
     @SuppressLint("SupportAnnotationUsage")
+    @PUT
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    @RawRes
+    fun seenNotification(
+        @Url url: String,
+        @Header("auth-token") token: String
+    ): Call<Notification>
+
+    @SuppressLint("SupportAnnotationUsage")
     @GET
     @Headers(
         "Content-Type: application/json",

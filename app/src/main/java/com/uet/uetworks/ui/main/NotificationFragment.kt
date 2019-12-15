@@ -1,7 +1,6 @@
 package com.uet.uetworks.ui.main
 
 import android.app.AlertDialog
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -19,7 +18,6 @@ import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.Notification
 import com.uet.uetworks.model.NotificationDetail
 import kotlinx.android.synthetic.main.fragment_notification.*
-import kotlinx.android.synthetic.main.item_notification.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -61,8 +59,7 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
                 }
 
                 override fun onResponse(
-                    call: Call<Notification>,
-                    response: Response<Notification>
+                    call: Call<Notification>, response: Response<Notification>
                 ) {
                     Log.e("codeNotification", response.code().toString())
                     response.body()?.let { body ->
@@ -97,8 +94,9 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
         clickNotification()
         var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setTitle(notificationDetail.title)
-        builder.setMessage(notificationDetail.content.replace("<br />","\n"))
+        builder.setMessage(notificationDetail.content.replace("<br />", "\n"))
         builder.setNeutralButton("OK") { _, _ ->
+            seenNotification()
             dataNotification.observe(this, Observer {
                 it.remove(notificationDetail)
                 notificationAdapter.notifyDataSetChanged()
@@ -126,6 +124,24 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
         })
     }
 
+    private fun seenNotification() {
+        api.seenNotification(
+            "message/" + MySharedPreferences.getInstance(requireContext()).getIdMessage() + "/seen",
+            MySharedPreferences.getInstance(requireContext()).getToken()
+        )
+            .enqueue(object : Callback<Notification> {
+                override fun onFailure(call: Call<Notification>, t: Throwable) {
+                    Log.e("seen", t.message)
+                }
+
+                override fun onResponse(
+                    call: Call<Notification>,
+                    response: Response<Notification>
+                ) {
+                    Log.e("codeSeen", response.code().toString())
+                }
+            })
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

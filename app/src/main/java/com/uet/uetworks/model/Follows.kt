@@ -6,7 +6,7 @@ data class Follows(
     @SerializedName("createdAt") var createdAt: String,
     @SerializedName("id") var id: Int,
     @SerializedName("internshipTerm") var internshipTerm: Int,
-    @SerializedName("lecturersName") var lecturersName: String,
+    @SerializedName("lecturersName") var lecturersName: String?,
     @SerializedName("partnerName") var partnerName: String,
     @SerializedName("postId") var postId: Int,
     @SerializedName("postTitle") var postTitle: String,
