@@ -49,7 +49,7 @@ class MySharedPreferences private constructor() {
 
 
     fun checkLogin(): Boolean {
-        return preferences.getBoolean(KEY_LOGIN, true)
+        return preferences.getBoolean(KEY_LOGIN, false)
     }
 
     fun setLogin(isLogin: Boolean) {

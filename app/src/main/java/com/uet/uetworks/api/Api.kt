@@ -2,12 +2,13 @@ package com.uet.uetworks.api
 
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
+import com.squareup.okhttp.RequestBody
 import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.model.*
 import retrofit2.Call
 import retrofit2.http.*
-import roboguice.util.SafeAsyncTask.Task
 import retrofit2.http.Url
+
 
 
 interface Api {
@@ -118,13 +119,35 @@ interface Api {
         @Header("auth-token") token: String
     ): Call<Content>
 
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/studentInfo")
+    @RawRes
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    fun getStudentInfo(
+        @Header("auth-token") token: String
+    ): Call<Student>
 
     @SuppressLint("SupportAnnotationUsage")
+
+    @PUT("/studentInfo")
+    @RawRes
     @PUT
     @Headers(
         "Content-Type: application/json",
         "Accept: application/json"
     )
+
+    fun updateStudentInfo(
+        @Header("auth-token") token: String,
+        @Body student: Student
+    ): Call<Student>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @PUT("/changePassword")
+    @RawRes
     fun checkFollowId(
         @Url url: String,
         @Header("auth-token") token: String,
@@ -138,6 +161,11 @@ interface Api {
         "Content-Type: application/json",
         "Accept: application/json"
     )
+    fun changePass(
+        @Header("auth-token") token: String,
+        @Body changePassRequest: ChangePassRequest
+    ): Call<ChangePassResponse>
+  
     fun getInternship(
         @Header("auth-token") token: String
     ): Call<Internship>
