@@ -284,7 +284,7 @@
                     <Spinner android:layout_width="0dp"
                         android:layout_weight="0.4"
                         android:autofillHints="Chọn ngành"
-                        android:id="@+id/sp_major"
+                        android:id="@+id/sp_class"
                         android:layout_height="match_parent"/>
                 </LinearLayout>
             </LinearLayout>
