@@ -10,7 +10,6 @@ import retrofit2.http.*
 import retrofit2.http.Url
 
 
-
 interface Api {
     @SuppressLint("SupportAnnotationUsage")
     @POST("/login")
@@ -131,10 +130,8 @@ interface Api {
     ): Call<Student>
 
     @SuppressLint("SupportAnnotationUsage")
-
     @PUT("/studentInfo")
     @RawRes
-    @PUT
     @Headers(
         "Content-Type: application/json",
         "Accept: application/json"
@@ -165,7 +162,13 @@ interface Api {
         @Header("auth-token") token: String,
         @Body changePassRequest: ChangePassRequest
     ): Call<ChangePassResponse>
-  
+
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/internship")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
     fun getInternship(
         @Header("auth-token") token: String
     ): Call<Internship>

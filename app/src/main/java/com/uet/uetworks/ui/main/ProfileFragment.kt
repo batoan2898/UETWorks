@@ -19,8 +19,6 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.squareup.okhttp.MediaType
-import com.squareup.okhttp.RequestBody
 import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
 import com.uet.uetworks.api.Api
@@ -32,7 +30,6 @@ import com.uet.uetworks.ui.LoginActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
-import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,8 +37,6 @@ import java.lang.Double.parseDouble
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import com.uet.uetworks.ui.LoginActivity
-import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
     lateinit var api: Api
