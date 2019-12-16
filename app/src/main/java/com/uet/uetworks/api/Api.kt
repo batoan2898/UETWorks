@@ -134,7 +134,6 @@ interface Api {
 
     @PUT("/studentInfo")
     @RawRes
-    @PUT
     @Headers(
         "Content-Type: application/json",
         "Accept: application/json"
@@ -146,7 +145,7 @@ interface Api {
     ): Call<Student>
 
     @SuppressLint("SupportAnnotationUsage")
-    @PUT("/changePassword")
+    @PUT
     @RawRes
     fun checkFollowId(
         @Url url: String,
@@ -156,7 +155,7 @@ interface Api {
 
 
     @SuppressLint("SupportAnnotationUsage")
-    @GET("/internship")
+    @GET("/changePassword")
     @Headers(
         "Content-Type: application/json",
         "Accept: application/json"
@@ -165,7 +164,14 @@ interface Api {
         @Header("auth-token") token: String,
         @Body changePassRequest: ChangePassRequest
     ): Call<ChangePassResponse>
-  
+
+
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/internship")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
     fun getInternship(
         @Header("auth-token") token: String
     ): Call<Internship>
@@ -201,6 +207,23 @@ interface Api {
     fun getOther(
         @Header("auth-token") token: String
     ): Call<PartnerFitOther>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    @HTTP(method = "DELETE", hasBody = true)
+    fun unfollow(
+        @Url url: String,
+        @Header("auth-token") token: String,
+        @Body partnerDTO: PartnerDTO
+    ): Call<PartnerDTO>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @POST("/addFollowByStudent")
+    @Headers("Content-Type: application/json", "Accept: application/json")
+    @RawRes
+    fun addOtherByStudent(@Body partnerOther: PartnerOther,
+                          @Header("auth-token") token: String): Call<Void>
 }
-
-

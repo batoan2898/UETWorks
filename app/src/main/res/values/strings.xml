@@ -24,5 +24,13 @@
     <string name="logout">Đăng xuất</string>
     <string name="changePass">Đổi mật khẩu</string>
     <string name="enrol">Đăng ký</string>
+    <string name="other_name">Tên công ty</string>
+    <string name="other_address">Địa chỉ</string>
+    <string name="other_email">Email liên hệ</string>
+    <string name="other_phone">Số điện thoại</string>
+    <string name="search_other">Tìm công ty ngoài</string>
+    <string name="search_partner">Tìm đối tác</string>
+    <string name="cancel">Hủy</string>
+    <string name="no_message">Không có thông báo mới !</string>
 
 </resources>
