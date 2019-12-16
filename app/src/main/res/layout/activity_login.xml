@@ -31,8 +31,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="16022483" />
+        android:inputType="textPersonName" />
 
     <TextView
         android:id="@+id/tvPass"
@@ -50,8 +49,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:ems="10"
-        android:inputType="textPassword"
-        android:text="1" />
+        android:inputType="textPassword" />
 
     <TextView
         android:id="@+id/tvForgotPass"
