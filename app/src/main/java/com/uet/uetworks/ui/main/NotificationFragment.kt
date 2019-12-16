@@ -1,6 +1,7 @@
 package com.uet.uetworks.ui.main
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -88,7 +89,7 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
     }
 
     override fun onNotificationClick(notificationDetail: NotificationDetail) {
-        notificationDetail.id?.let {
+        notificationDetail.id.let {
             MySharedPreferences.getInstance(requireContext()).setIdMessage(it)
         }
         clickNotification()
@@ -96,9 +97,8 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
         builder.setTitle(notificationDetail.title)
         builder.setMessage(notificationDetail.content.replace("<br />", "\n"))
         builder.setNeutralButton("OK") { _, _ ->
-            seenNotification()
+            if (notificationDetail.status == "NEW") seenNotification()
             dataNotification.observe(this, Observer {
-                it.remove(notificationDetail)
                 notificationAdapter.notifyDataSetChanged()
             })
         }
