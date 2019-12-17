@@ -3,6 +3,9 @@ package com.uet.uetworks.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.inputmethod.EditorInfo
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.uet.uetworks.CommonMethod
@@ -32,7 +35,8 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        edtUser.setText(MySharedPreferences.getInstance(this).getUser())
+        initKeyboard()
 
         api = ApiBuilder.client?.create(Api::class.java)!!
         btnLogin.setOnClickListener {
@@ -45,6 +49,19 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
         tvForgotPass.setOnClickListener {
             val intent = Intent(this, RecoverPassActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    private fun initKeyboard() {
+        edtPass.setOnEditorActionListener { v, actionId, event ->
+            if ((event != null && (event.keyCode == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                if (checkLogin()) {
+                    if (CommonMethod.isNetworkAvailable(this))
+                        loginRetrofit(userName, password)
+                    else CommonMethod.showAlert("Internet Connectivity Failure", this)
+                }
+            }
+            false
         }
     }
 
@@ -84,8 +101,9 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
             startActivity(intent)
             finish()
             MySharedPreferences.getInstance(this).setToken(token = token!!)
+            MySharedPreferences.getInstance(this).setUser(userName = response.body()?.userName.toString())
 
-            MySharedPreferences.getInstance(this).setLogin(isLogin = true)
+
         } else {
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
         }
