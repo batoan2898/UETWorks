@@ -97,6 +97,18 @@ interface Api {
     ): Call<NotificationDetail>
 
     @SuppressLint("SupportAnnotationUsage")
+    @PUT
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    @RawRes
+    fun seenNotification(
+        @Url url: String,
+        @Header("auth-token") token: String
+    ): Call<Notification>
+
+    @SuppressLint("SupportAnnotationUsage")
     @GET
     @Headers(
         "Content-Type: application/json",
@@ -132,7 +144,7 @@ interface Api {
     ): Call<Student>
 
     @SuppressLint("SupportAnnotationUsage")
-    @GET("/studentClass")
+	@GET("/studentClass")
     @RawRes
     @Headers(
         "Content-Type: application/json",
@@ -150,8 +162,8 @@ interface Api {
         @Body studentClassRequest: StudentClassRequest
     ):Call<Void>
 
-    @SuppressLint("SupportAnnotationUsage")
-    @PUT("/changePassword")
+	@SuppressLint("SupportAnnotationUsage")
+    @PUT("/changePassword")    
     @RawRes
     fun changePass(
         @Header("auth-token") token: String,
@@ -212,6 +224,23 @@ interface Api {
     fun getOther(
         @Header("auth-token") token: String
     ): Call<PartnerFitOther>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    @HTTP(method = "DELETE", hasBody = true)
+    fun unfollow(
+        @Url url: String,
+        @Header("auth-token") token: String,
+        @Body partnerDTO: PartnerDTO
+    ): Call<PartnerDTO>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @POST("/addFollowByStudent")
+    @Headers("Content-Type: application/json", "Accept: application/json")
+    @RawRes
+    fun addOtherByStudent(@Body partnerOther: PartnerOther,
+                          @Header("auth-token") token: String): Call<Void>
 }
-
-

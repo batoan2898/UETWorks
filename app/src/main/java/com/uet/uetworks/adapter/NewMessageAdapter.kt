@@ -52,7 +52,7 @@ class NewMessageAdapter(
     open class NewMessageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindData(message: NewMessage) {
             itemView.tvMessageTitle.text = message.title
-            itemView.tvSendDate.text = message.sendDate.toString()
+            itemView.tvSendDate.text = message.sendDate
             itemView.tvSenderName.text = message.senderName
         }
     }

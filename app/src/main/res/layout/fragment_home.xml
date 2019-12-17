@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
+    android:background="#D6DFD6"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,6 +16,9 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:minHeight="110dp"
+            android:background="@drawable/shape"
+            android:layout_margin="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="true">
@@ -35,8 +39,17 @@
                 android:layout_marginTop="5dp"
                 android:text="Thông báo mới!"
                 android:textColor="@color/colorPrimary"
-                android:textSize="30sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_marginLeft="10dp"
+                android:layout_below="@id/tvNewNotification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:id="@+id/tvNoMessage"
+                android:text="@string/no_message" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_below="@id/tvNewNotification"
@@ -50,30 +63,46 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:minHeight="110dp"
+            android:background="@drawable/shape"
+            android:layout_marginHorizontal="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
+                android:text="Thực tập chuyên ngành"
                 android:id="@+id/tvInternshipTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:clickable="true"
-                android:text="Thực tập chuyên ngành"
-                android:textSize="24sp"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvInternshipTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <Button
+                android:id="@+id/btnInternship"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:layout_gravity="center"
                 android:background="@drawable/button_rounded_corners"
                 android:text="@string/enrol"
+                android:layout_marginBottom="4dp"
                 android:textColor="@color/colorWhite" />
         </LinearLayout>
 
         <RelativeLayout
+            android:minHeight="110dp"
+            android:background="@drawable/shape"
+            android:layout_margin="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -84,7 +113,7 @@
                 android:layout_marginLeft="10dp"
                 android:clickable="true"
                 android:text="Thực tập đối tác của khoa"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <ImageButton
@@ -111,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:paddingRight="10dp"
                     android:ems="10"
-                    android:hint="Search Partner"
+                    android:hint="@string/search_partner"
                     android:inputType="textPersonName"
                     android:textSize="12sp" />
 
@@ -122,6 +151,7 @@
                     android:layout_height="35dp"
                     android:background="@drawable/button_rounded_corners"
                     android:text="@string/enrol"
+                    android:layout_marginBottom="4dp"
                     android:textColor="@color/colorWhite" />
             </LinearLayout>
 
@@ -141,15 +171,15 @@
                 android:id="@+id/recyclerPost"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:visibility="gone"/>
-
+                android:layout_marginBottom="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:paddingTop="16dp"
+            android:background="@drawable/shape"
+            android:layout_marginHorizontal="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -160,18 +190,10 @@
                 android:layout_marginLeft="10dp"
                 android:clickable="true"
                 android:text="Thực tập công ty ngoài"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/btnShowOther"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentRight="true"
-                android:src="@android:drawable/ic_input_add"
-                android:layout_alignParentEnd="true"
-                />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -188,10 +210,11 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPersonName"
-                    android:text="Name"
+                    android:hint="@string/search_other"
                     android:textSize="12sp" />
 
                 <Button
+                    android:layout_marginBottom="4dp"
                     android:id="@+id/btnFollowOther"
                     android:layout_weight="2"
                     android:layout_width="0dp"
@@ -212,7 +235,7 @@
                 android:layout_marginRight="10dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="1" />
+                android:hint="@string/other_name" />
 
             <EditText
                 android:id="@+id/edtOther2"
@@ -223,7 +246,7 @@
                 android:layout_marginRight="10dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="2" />
+                android:hint="@string/other_address" />
 
             <EditText
                 android:id="@+id/edtOther3"
@@ -234,7 +257,7 @@
                 android:layout_marginRight="10dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="3" />
+                android:hint="@string/other_email" />
 
             <EditText
                 android:id="@+id/edtOther4"
@@ -245,7 +268,7 @@
                 android:layout_marginRight="10dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="4" />
+                android:hint="@string/other_phone" />
 
             <Button
                 android:layout_below="@id/edtOther4"
@@ -253,12 +276,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
-                android:layout_marginTop="-7dp"
                 android:background="@drawable/button_rounded_corners"
                 android:text="@string/enrol"
                 android:textColor="@color/colorWhite" />
-
-
         </RelativeLayout>
 
     </LinearLayout>

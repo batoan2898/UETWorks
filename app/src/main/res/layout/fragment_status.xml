@@ -7,11 +7,12 @@
     tools:context=".ui.main.StatusFragment">
 
     <TextView
+        android:id="@+id/tvStatusTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
-        android:text="Đợt 2 năm 2019"
+        android:text="Đợt X năm 20XX"
         android:textSize="24sp"
         android:textStyle="bold" />
 
