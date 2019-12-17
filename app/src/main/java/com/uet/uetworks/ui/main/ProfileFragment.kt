@@ -13,19 +13,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.squareup.okhttp.ResponseBody
 import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
-import com.uet.uetworks.model.ChangePassRequest
-import com.uet.uetworks.model.ChangePassResponse
-import com.uet.uetworks.model.Student
+import com.uet.uetworks.model.*
 import com.uet.uetworks.ui.LoginActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.apache.commons.codec.binary.Hex
@@ -37,8 +33,15 @@ import java.lang.Double.parseDouble
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
+class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+    }
 
-class ProfileFragment : Fragment() {
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+
+    }
+
     lateinit var api: Api
     private lateinit var dataResponse: Student
     private lateinit var dataRequest: Student
@@ -47,6 +50,15 @@ class ProfileFragment : Fragment() {
 
     var token: String? = null
     var myDialog: Dialog? = null
+    var spinner: Spinner? = null
+//    var numbergrade= listOf<Int>()
+//    var schoolyear_list= listOf<String>()
+    var schoolyear_list:ArrayList<String> = ArrayList()
+    var spinner2: Spinner? = null
+    //var class_list = arrayOf("N", "CA", "CAC", "CA-CLC", "CB", "CC", "CD", "CLC-CNTT", "T", "ĐA", "ĐB", "ĐA-CLC", "E", "V", "M", "H", "CE", "J").toCollection(ArrayList())
+
+    var class_list: ArrayList<String> = ArrayList()
+    var studentClassList: ArrayList<StudentClass> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -59,8 +71,20 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var manager = LinearLayoutManager(requireContext())
-        getInfoUser()
+        //class spinner
+        for (grade in 58..90){
+            schoolyear_list.add(grade.toString())
+        }
+        spinner = this.sp_grade
+        spinner!!.setOnItemSelectedListener(this)
+        val aa = ArrayAdapter(this.requireContext(), android.R.layout.simple_spinner_item, schoolyear_list)
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinner!!.setAdapter(aa)
+
+        //init student class
+        initView(view)
+
+       // getInfoUser()
         Log.e("token", MySharedPreferences.getInstance(requireContext()).getToken())
         setUpView()
     }
@@ -129,8 +153,9 @@ class ProfileFragment : Fragment() {
                     et_email_input.setText(dataResponse.email)
                     et_phone_input.setText(dataResponse.phoneNumber)
                     et_skype_input.setText(dataResponse.skype)
-                    et_class_input.setText(dataResponse.infoBySchool.studentClass)
-                    et_skill_input.setText(dataResponse.infoBySchool.major)
+                    sp_grade.setSelection(schoolyear_list.indexOf(dataResponse.infoBySchool.grade))
+                    sp_class.setSelection(class_list.indexOf(dataResponse.infoBySchool.studentClass))
+                    et_skill_input.setText("")
                     et_foreignlg_input.setText("")
                     et_hobby_input.setText(dataResponse.desire)
 
@@ -152,8 +177,9 @@ class ProfileFragment : Fragment() {
         var phoneNumber = et_phone_input.text
         var skype = et_skype_input.text
         var favor = et_hobby_input.text
-        var grade = et_class_input.text
-        var major = et_skill_input.text
+        var grade = sp_grade.selectedItem
+        var major = sp_class.selectedItem
+        var skill = et_skill_input.text
         var language = et_foreignlg_input.text
         if(validDateandPhone(birthday.toString().trim(), phoneNumber.toString().trim())){
             dataRequest.fullName = fullName.toString()
@@ -164,20 +190,35 @@ class ProfileFragment : Fragment() {
             dataRequest.skype=skype.toString()
             dataRequest.desire=favor.toString()
             dataRequest.infoBySchool.grade=grade.toString()
-            dataRequest.infoBySchool.major=major.toString()
-
-            api.updateStudentInfo(MySharedPreferences.getInstance(requireContext()).getToken(), dataRequest)
-                .enqueue(object: Callback<Student> {
-                    override fun onFailure(call: Call<Student>, t: Throwable) {
-                        Log.e("Error student info", t.message.toString())
-                        Toast.makeText(this@ProfileFragment.context,"Cập nhật thất bại", Toast.LENGTH_SHORT).show()
+            dataRequest.infoBySchool.studentClass=major.toString()
+            for(studentClass: StudentClass in studentClassList){
+                if(major.toString().equals(studentClass.studentClass)){
+                    dataRequest.infoBySchool.major=studentClass.className
+                }
+            }
+            var studentClassRequest = StudentClassRequest(grade.toString(), major.toString())
+            api.putStudentClass(MySharedPreferences.getInstance(requireContext()).getToken(),studentClassRequest )
+                .enqueue(object: Callback<Void> {
+                    override fun onFailure(call: Call<Void>, t: Throwable) {
+                        Log.e("Error update student class", t.message.toString())
                     }
 
-                    override fun onResponse(call: Call<Student>, response: Response<Student>) {
-                        if (response.code() == 200) {
-                            Toast.makeText(this@ProfileFragment.context,"Cập nhật thành công", Toast.LENGTH_SHORT).show()
-                        }
+                    override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                        api.updateStudentInfo(MySharedPreferences.getInstance(requireContext()).getToken(), dataRequest)
+                            .enqueue(object: Callback<Student> {
+                                override fun onFailure(call: Call<Student>, t: Throwable) {
+                                    Log.e("Error update student info", t.message.toString())
+                                    Toast.makeText(this@ProfileFragment.context,"Cập nhật thất bại", Toast.LENGTH_SHORT).show()
+                                }
 
+                                override fun onResponse(call: Call<Student>, response: Response<Student>) {
+                                    if (response.code() == 200) {
+                                        Toast.makeText(this@ProfileFragment.context,"Cập nhật thành công", Toast.LENGTH_SHORT).show()
+                                    }
+
+                                }
+
+                            })
                     }
 
                 })
@@ -243,6 +284,38 @@ class ProfileFragment : Fragment() {
                         Toast.makeText(this@ProfileFragment.context,response.message(), Toast.LENGTH_SHORT).show()
                         Log.e("Error: ",response.message() + " - " + response.message())
                     }
+                }
+
+            })
+    }
+
+    internal fun initView(view: View){
+        api = ApiBuilder.client?.create(Api::class.java)!!
+        api.getStudentClass(MySharedPreferences.getInstance(requireContext()).getToken())
+            .enqueue(object: Callback<ArrayList<StudentClass>>{
+                override fun onFailure(call: Call<ArrayList<StudentClass>>, t: Throwable) {
+                    Log.e("Error get student class", t.message.toString())
+                    Toast.makeText(this@ProfileFragment.context,"Lấy danh sách lớp thất bại", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onResponse(
+                    call: Call<ArrayList<StudentClass>>,
+                    response: Response<ArrayList<StudentClass>>
+                ) {
+                    if(response.code() == 200){
+                        studentClassList = response.body()!!
+                        for(studentClass: StudentClass in studentClassList){
+                            class_list.add(studentClass.studentClass)
+                        }
+                        spinner2 = sp_class
+                        spinner2!!.setOnItemSelectedListener(this@ProfileFragment)
+                        val bb = ArrayAdapter(this@ProfileFragment.context!!, android.R.layout.simple_spinner_item, class_list)
+                        bb.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                        spinner2!!.setAdapter(bb)
+
+                        getInfoUser()
+                    }
+
                 }
 
             })

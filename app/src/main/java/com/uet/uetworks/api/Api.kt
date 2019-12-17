@@ -3,6 +3,7 @@ package com.uet.uetworks.api
 import android.annotation.SuppressLint
 import androidx.annotation.RawRes
 import com.squareup.okhttp.RequestBody
+import com.squareup.okhttp.ResponseBody
 import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.model.*
 import retrofit2.Call
@@ -131,39 +132,55 @@ interface Api {
     ): Call<Student>
 
     @SuppressLint("SupportAnnotationUsage")
-
     @PUT("/studentInfo")
     @RawRes
     @Headers(
         "Content-Type: application/json",
         "Accept: application/json"
     )
-
     fun updateStudentInfo(
         @Header("auth-token") token: String,
         @Body student: Student
     ): Call<Student>
 
     @SuppressLint("SupportAnnotationUsage")
-    @PUT
+	@GET("/studentClass")
     @RawRes
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    fun getStudentClass(
+        @Header("auth-token") token: String
+    ): Call<ArrayList<StudentClass>>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @PUT("/infoBySchool/class")
+    @RawRes
+    fun putStudentClass(
+        @Header("auth-token") token: String,
+        @Body studentClassRequest: StudentClassRequest
+    ):Call<Void>
+
+	@SuppressLint("SupportAnnotationUsage")
+    @PUT("/changePassword")    
+    @RawRes
+    fun changePass(
+        @Header("auth-token") token: String,
+        @Body changePassRequest: ChangePassRequest
+    ): Call<ChangePassResponse>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @PUT
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
     fun checkFollowId(
         @Url url: String,
         @Header("auth-token") token: String,
         @Body partnerDTO: PartnerDTO
     ): Call<PartnerDTO>
-
-
-    @SuppressLint("SupportAnnotationUsage")
-    @GET("/changePassword")
-    @Headers(
-        "Content-Type: application/json",
-        "Accept: application/json"
-    )
-    fun changePass(
-        @Header("auth-token") token: String,
-        @Body changePassRequest: ChangePassRequest
-    ): Call<ChangePassResponse>
 
 
     @SuppressLint("SupportAnnotationUsage")
