@@ -1,12 +1,14 @@
 package com.uet.uetworks.ui.main
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,13 +20,18 @@ import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.Company
 import com.uet.uetworks.model.Follows
 import com.uet.uetworks.model.Internship
+import com.uet.uetworks.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_status.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
+
+
 @Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
-class StatusFragment : Fragment() {
+class StatusFragment : Fragment(), StatusAdapter.OnFollowerClick {
+
 
     private lateinit var statusAdapter: StatusAdapter
     lateinit var api: Api
@@ -35,7 +42,7 @@ class StatusFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val manager = LinearLayoutManager(requireContext())
         recyclerStatusFragment.layoutManager = manager
-        statusAdapter = StatusAdapter(context)
+        statusAdapter = StatusAdapter(context,this)
         recyclerStatusFragment.adapter = statusAdapter
         initView()
     }
@@ -81,7 +88,8 @@ class StatusFragment : Fragment() {
                                 dataFollowsResponse.postTitle,
                                 dataFollowsResponse.status,
                                 dataFollowsResponse.student,
-                                dataFollowsResponse.studentName
+                                dataFollowsResponse.studentName,
+                                dataFollowsResponse.partnerId
                             )
                         } as ArrayList<Follows?>)
                     }
@@ -89,12 +97,54 @@ class StatusFragment : Fragment() {
             })
     }
 
+    fun selectInternship(id : Int){
+        api.selectIntern("/select/intern/$id",MySharedPreferences.getInstance(requireContext()).getToken())
+            .enqueue(object : Callback<Internship>{
+                override fun onFailure(call: Call<Internship>, t: Throwable) {
+                    Log.e("selectMessage",t.message)
+                }
+
+                override fun onResponse(call: Call<Internship>, response: Response<Internship>) {
+                    if (response.code() == 200){
+                        Toast.makeText(requireContext(),"Xác nhận thành công",Toast.LENGTH_SHORT).show()
+                        getInternship()
+                    }else{
+                        Toast.makeText(requireContext(),"Lỗi",Toast.LENGTH_SHORT).show()
+
+                    }
+                }
+            })
+
+    }
+
+    override fun onItemClick(follows: Follows) {
+        Toast.makeText(requireContext(),follows.partnerName,Toast.LENGTH_SHORT).show()
+        if (follows.status == "PASS"){
+            var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Xác nhận công ty thực tập")
+            builder.setMessage("Bạn chỉ được phép chọn 1 lần, Bạn đã chắc chắn ?")
+            builder.setPositiveButton(
+                "Đồng ý"
+            ) { dialog, _ ->
+                selectInternship(follows.partnerId)
+                dialog.cancel() }
+
+            builder.setNegativeButton(
+                "Hủy"
+            ) { dialog, _ -> dialog.cancel() }
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
+        }
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_status, container, false)
+        return inflater.inflate(com.uet.uetworks.R.layout.fragment_status, container, false)
     }
 
     companion object {

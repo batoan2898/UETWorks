@@ -1,6 +1,7 @@
 package com.uet.uetworks.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class PartnerDTO(
     @SerializedName("postId") var idPost: Int?,
@@ -9,11 +10,6 @@ data class PartnerDTO(
     @SerializedName("status") var status: String?,
     @SerializedName("postTitle") var postTitle: String?,
     @SerializedName("studentId") var studentId: Int?
-)
+): Serializable
 
-data class Partner(
-    @SerializedName("partnerName") var partnerName : String,
-    @SerializedName("address") var address: String,
-    @SerializedName("email") var email: String,
-    @SerializedName("phone") var phone: String
-)
+

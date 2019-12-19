@@ -1,6 +1,7 @@
 package com.uet.uetworks.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Internship(
     @SerializedName("createdAt") var createdAt: Long,
@@ -14,5 +15,5 @@ data class Internship(
     @SerializedName("startDate") var startDate: Long,
     @SerializedName("student") var student: Student,
     @SerializedName("score") var score: String?
-)
+) : Serializable
 

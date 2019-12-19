@@ -11,6 +11,15 @@
         android:layout_height="match_parent"
         tools:context=".ui.PostDetailActivity">
 
+        <TextView
+            android:background="#534C4C"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvStatus"
+            android:text="Followed"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"/>
+
         <LinearLayout
             android:id="@+id/linearPostDetail"
             android:layout_width="match_parent"

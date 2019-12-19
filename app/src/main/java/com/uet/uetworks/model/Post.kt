@@ -16,7 +16,7 @@ data class Post(
     @SerializedName("size") var size: Int,
     @SerializedName("totalElements") var totalElements: Int,
     @SerializedName("totalPage") var totalPage: Int
-)
+):Serializable
 
 data class Content(
     @SerializedName("content") var  contentPost: String,

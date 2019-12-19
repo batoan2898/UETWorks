@@ -17,4 +17,4 @@ data class NewMessage(
     @SerializedName("sendDate") var sendDate: String,
     @SerializedName("status") var status: String,
     @SerializedName("title") var title: String?
-)
+) :Serializable

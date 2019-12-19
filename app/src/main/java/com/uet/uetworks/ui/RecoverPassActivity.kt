@@ -35,14 +35,14 @@ class RecoverPassActivity : AppCompatActivity(), Callback<EmailVNU> {
     private fun checkEmail(): Boolean {
         emailVNU = edtEmail.text.toString()
         if (emailVNU.isEmpty()) {
-            Toast.makeText(this, "Data Empty", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Kiểm tra lại email", Toast.LENGTH_SHORT).show()
             return false
         } else if (emailVNU.indexOf(" ") > 0
             || emailVNU.indexOf("@") == -1
             || emailVNU.indexOf("@") != emailVNU.lastIndexOf("@")
             || emailVNU.lastIndexOf(".") == emailVNU.length - 1
         ) {
-            Toast.makeText(this, "Data Error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Kiểm tra lại Email", Toast.LENGTH_SHORT).show()
             return false
         }
         return true
@@ -61,12 +61,12 @@ class RecoverPassActivity : AppCompatActivity(), Callback<EmailVNU> {
     override fun onResponse(call: Call<EmailVNU>, response: Response<EmailVNU>) {
         Toast.makeText(this, response.code().toString(), Toast.LENGTH_SHORT).show()
         if (response.code() == 200) {
-            Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Kiểm tra mật khẩu mới trong EmailVNU", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish()
         } else {
-            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Kiểm tra lại Email", Toast.LENGTH_SHORT).show()
         }
     }
 }

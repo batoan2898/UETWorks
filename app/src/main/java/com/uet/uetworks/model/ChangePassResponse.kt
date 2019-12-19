@@ -1,6 +1,7 @@
 package com.uet.uetworks.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.sql.Timestamp
 
 data class ChangePassResponse (
@@ -13,4 +14,4 @@ data class ChangePassResponse (
     @SerializedName("status") var status: String,
     @SerializedName("token") var token: String,
     @SerializedName("userName") var userName: String
-)
+) : Serializable

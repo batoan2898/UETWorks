@@ -52,8 +52,6 @@ class MySharedPreferences private constructor() {
 
 
 
-
-
     fun setToken(token: String) {
         preferences.edit {
             it.putString(TOKEN, token)

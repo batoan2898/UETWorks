@@ -1,6 +1,7 @@
 package com.uet.uetworks.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Follows(
     @SerializedName("createdAt") var createdAt: String,
@@ -12,5 +13,6 @@ data class Follows(
     @SerializedName("postTitle") var postTitle: String,
     @SerializedName("status") var status: String,
     @SerializedName("student") var student: Student,
-    @SerializedName("studentName") var studentName: String
-)
+    @SerializedName("studentName") var studentName: String,
+    @SerializedName("partnerId") var partnerId: Int
+) : Serializable

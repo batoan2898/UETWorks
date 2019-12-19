@@ -18,6 +18,7 @@ import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.Notification
 import com.uet.uetworks.model.NotificationDetail
+import com.uet.uetworks.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_notification.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -35,6 +36,7 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val manager = LinearLayoutManager(requireContext())
         recyclerNotificationFragment.layoutManager = manager
         notificationAdapter = NotificationAdapter(context, this)

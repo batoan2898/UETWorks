@@ -12,7 +12,7 @@ data class Notification(
     @SerializedName("numberOfElements") var numberOfElements: Int,
     @SerializedName("size") var size: Int,
     @SerializedName("number") var number: Int
-)
+) :Serializable
 
 data class NotificationDetail(
     @SerializedName("id") var id: String,

@@ -195,12 +195,12 @@ interface Api {
 
 
     @SuppressLint("SupportAnnotationUsage")
-    @PUT("/internship")
+    @POST("/internship")
     @Headers(
         "Content-Type: application/json",
         "Accept: application/json"
     )
-    fun putInternship(
+    fun postInternship(
         @Header("auth-token") token: String
     ): Call<Internship>
 
@@ -213,7 +213,7 @@ interface Api {
     )
     fun getFit(
         @Header("auth-token") token: String
-    ): Call<PartnerFitOther>
+    ): Call<ArrayList<ArrayList<Number>>>
 
     @SuppressLint("SupportAnnotationUsage")
     @GET("/partnerId/name/other")
@@ -223,7 +223,7 @@ interface Api {
     )
     fun getOther(
         @Header("auth-token") token: String
-    ): Call<PartnerFitOther>
+    ): Call<ArrayList<ArrayList<Number>>>
 
     @SuppressLint("SupportAnnotationUsage")
     @Headers(
@@ -237,10 +237,39 @@ interface Api {
         @Body partnerDTO: PartnerDTO
     ): Call<PartnerDTO>
 
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json")
+    @PUT
+    fun followPost(
+        @Url url: String,
+        @Header("auth-token") token: String,
+        @Body postFollow: PostFollow
+    ): Call<PostFollow>
+
+
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json")
+    @POST
+    fun selectIntern(
+        @Url url: String,
+        @Header("auth-token") token: String
+    ): Call<Internship>
+
+
+
     @SuppressLint("SupportAnnotationUsage")
     @POST("/addFollowByStudent")
     @Headers("Content-Type: application/json", "Accept: application/json")
     @RawRes
     fun addOtherByStudent(@Body partnerOther: PartnerOther,
+                          @Header("auth-token") token: String): Call<Void>
+
+    @SuppressLint("SupportAnnotationUsage")
+    @POST("/addFollowByStudent")
+    @Headers("Content-Type: application/json", "Accept: application/json")
+    @RawRes
+    fun addCompany(@Body company: CompanyAdditional,
                           @Header("auth-token") token: String): Call<Void>
 }

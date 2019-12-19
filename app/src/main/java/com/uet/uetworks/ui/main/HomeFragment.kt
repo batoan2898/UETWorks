@@ -2,9 +2,11 @@ package com.uet.uetworks.ui.main
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
@@ -25,12 +27,16 @@ import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
 import com.uet.uetworks.adapter.PostAdapter
 import com.uet.uetworks.model.*
+import com.uet.uetworks.ui.MainActivity
 import kotlin.collections.ArrayList
 import com.uet.uetworks.ui.PostDetailFragment
+import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat
+import ir.mirrajabi.searchdialog.core.SearchResultListener
 
 
-@Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
+@Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "UNREACHABLE_CODE")
 class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.OnClickPost {
+
 
     var totalPage: Int = 0
     private var lastPage: Boolean = true
@@ -41,9 +47,10 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
     private lateinit var postAdapter: PostAdapter
     lateinit var api: Api
     private var dataResponse: ArrayList<NewMessage> = arrayListOf()
-    private var listFit: ArrayList<Fit> = arrayListOf()
-    private var listOther: ArrayList<Fit> = arrayListOf()
-
+    private var dataFitResponse: ArrayList<Company> = arrayListOf()
+    private var dataOtherRespone: ArrayList<Company> = arrayListOf()
+    var companyId: Int = 0
+    var otherCompanyId: Int = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,13 +69,156 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
 
         getInternship()
         getDataNewMessage()
-        initView()
         getDataFit()
         getDataOther()
+        initView()
         checkFollowFit()
         checkFollowOther("Recruitment_other")
+//        postInternship()
         initFilterPartner()
+        initFilterOther()
+        initClickFollowPartner()
+        initClickFollowOther()
+        initClickInternship()
 
+    }
+
+    private fun initClickInternship() {
+        btnInternship.setOnClickListener {
+            if (btnInternship.text == getText(R.string.enrol)) {
+                postInternship()
+            }else{
+
+            }
+        }
+    }
+
+    private fun postInternship() {
+        api.postInternship(MySharedPreferences.getInstance(requireContext()).getToken())
+            .enqueue(object : Callback<Internship> {
+                override fun onFailure(call: Call<Internship>, t: Throwable) {
+                    Log.e("postInternship", t.message)
+                }
+
+                override fun onResponse(call: Call<Internship>, response: Response<Internship>) {
+                    if (response.code() == 200) {
+                        getInternship()
+                        checkFollowOther("Recruitment_other")
+                        checkFollowFit()
+                    }
+                }
+            })
+    }
+
+
+    private fun getDataOther() {
+        api.getOther(MySharedPreferences.getInstance(requireContext()).getToken())
+            .enqueue(object : Callback<ArrayList<ArrayList<Number>>> {
+                override fun onFailure(call: Call<ArrayList<ArrayList<Number>>>, t: Throwable) {
+                    Log.e("getOther", t.message)
+
+                }
+
+                override fun onResponse(
+                    call: Call<ArrayList<ArrayList<Number>>>,
+                    response: Response<ArrayList<ArrayList<Number>>>
+                ) {
+                    for (i in 0 until response.body()?.size!!) {
+                        var company = Company(
+                            response.body()!![i][0].toString(),
+                            response.body()!![i][1].toString()
+                        )
+                        dataOtherRespone.add(company)
+                    }
+                }
+
+            })
+    }
+
+    private fun getDataFit() {
+        api.getFit(MySharedPreferences.getInstance(requireContext()).getToken())
+            .enqueue(object : Callback<ArrayList<ArrayList<Number>>> {
+                override fun onFailure(call: Call<ArrayList<ArrayList<Number>>>, t: Throwable) {
+                    Log.e("getFit", t.message)
+                }
+
+                override fun onResponse(
+                    call: Call<ArrayList<ArrayList<Number>>>,
+                    response: Response<ArrayList<ArrayList<Number>>>
+                ) {
+                    for (i in 0 until response.body()?.size!!) {
+                        var company = Company(
+                            response.body()!![i][0].toString(),
+                            response.body()!![i][1].toString()
+                        )
+                        dataFitResponse.add(company)
+                    }
+
+                }
+
+            })
+
+    }
+
+    private fun initClickFollowOther() {
+        btnFollowOther.setOnClickListener {
+            followOther()
+        }
+    }
+
+    private fun followOther() {
+        var otherCompanyId = CompanyId(otherCompanyId)
+        var otherCompanyAdditional = CompanyAdditional(otherCompanyId, "Recruitment_other")
+        api.addCompany(
+            otherCompanyAdditional,
+            MySharedPreferences.getInstance(requireContext()).getToken()
+        )
+            .enqueue(object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.d("addFollowOther", t.message)
+                }
+
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    checkFollowOther("Recruitment_other")
+                    getInternship()
+                    getDataNewMessage()
+
+                }
+
+            })
+    }
+
+    private fun initClickFollowPartner() {
+        btnAddFollowPartner.setOnClickListener {
+            if (btnAddFollowPartner.text == getString(R.string.cancel)) {
+                unfollowPartner(0, null)
+            } else {
+                addFollowPartner()
+
+            }
+        }
+
+    }
+
+    private fun addFollowPartner() {
+        var companyId = CompanyId(companyId)
+        var companyAdditional = CompanyAdditional(companyId, "Recruitment")
+        api.addCompany(
+            companyAdditional,
+            MySharedPreferences.getInstance(requireContext()).getToken()
+        )
+            .enqueue(object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.d("addFollowPartner", t.message)
+                }
+
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                    checkFollowFit()
+                    getInternship()
+                    getDataNewMessage()
+
+                }
+            })
     }
 
     private fun addOther() {
@@ -127,7 +277,45 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
 
     }
 
-    private fun initFilterPartner() {}
+
+    private fun initFilterPartner() {
+        val dialog = SimpleSearchDialogCompat(requireContext(), "Search...",
+            "What are you looking for...?", null, dataFitResponse,
+            SearchResultListener<Company> { dialog, item, position ->
+                edtSearchPartner.setText(item.companyName.toString())
+                companyId = item.id?.toInt()!!
+                dialog.dismiss()
+            }
+        )
+
+        edtSearchPartner.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                dialog.show()
+                dialog.searchBox.typeface = Typeface.SERIF
+                return false
+            }
+
+        })
+    }
+
+    private fun initFilterOther() {
+        val dialog = SimpleSearchDialogCompat(requireContext(), "Search...",
+            "What are you looking for...?", null, dataOtherRespone,
+            SearchResultListener<Company> { dialog, item, position ->
+                edtSearchOther.setText(item.companyName.toString())
+                otherCompanyId = item.id?.toInt()!!
+                dialog.dismiss()
+            }
+        )
+        edtSearchOther.setOnTouchListener(object : View.OnTouchListener {
+            override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+                dialog.show()
+                dialog.searchBox.typeface = Typeface.SERIF
+                return false
+            }
+
+        })
+    }
 
 
     private fun checkFollowOther(postTitle: String?) {
@@ -186,6 +374,10 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
                 edtOther2.isEnabled = true
                 edtOther3.isEnabled = true
                 edtOther4.isEnabled = true
+                checkFollowFit()
+                checkFollowOther("Recruitment_other")
+                getInternship()
+
 
             }
 
@@ -206,7 +398,9 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
                 edtSearchPartner.setText("")
                 edtSearchPartner.isEnabled = true
                 btnAddFollowPartner.text = getString(R.string.enrol)
-
+                checkFollowFit()
+                checkFollowOther("Recruitment_other")
+                getInternship()
             }
 
         })
@@ -229,51 +423,9 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
                         edtSearchPartner.isEnabled = false
                         btnAddFollowPartner.text = getString(R.string.cancel)
 
-                        btnAddFollowPartner.setOnClickListener {
-                            if (btnAddFollowPartner.text == getString(R.string.cancel)) {
-                                unfollowPartner(0, null)
 
-                            }
-                        }
                     }
                 }
-            })
-    }
-
-    private fun getDataOther() {
-        api.getOther(MySharedPreferences.getInstance(requireContext()).getToken())
-            .enqueue(object : Callback<PartnerFitOther> {
-                override fun onFailure(call: Call<PartnerFitOther>, t: Throwable) {
-                    Log.e("getFit", t.message)
-
-                }
-
-                override fun onResponse(
-                    call: Call<PartnerFitOther>,
-                    response: Response<PartnerFitOther>
-                ) {
-                    response.body()?.listPartner
-                }
-
-            })
-    }
-
-    private fun getDataFit() {
-        api.getFit(MySharedPreferences.getInstance(requireContext()).getToken())
-            .enqueue(object : Callback<PartnerFitOther> {
-                override fun onFailure(call: Call<PartnerFitOther>, t: Throwable) {
-                    Log.e("getFit", t.message)
-                }
-
-                override fun onResponse(
-                    call: Call<PartnerFitOther>,
-                    response: Response<PartnerFitOther>
-                ) {
-                    response.body()?.let { body ->
-                    }
-                    Log.e("listfFit", listFit[0].partnerName)
-                }
-
             })
     }
 
@@ -401,18 +553,10 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
 
     private fun initViewNewMessage() {
 
-        btnShowNotification.setOnClickListener {
-            if (recyclerNewMessage.isVisible) {
-                recyclerNewMessage.visibility = View.GONE
-            } else if (recyclerNewMessage.isGone) {
-                recyclerNewMessage.visibility = View.VISIBLE
-            }
-        }
-
-        if (dataResponse.isEmpty()){
+        if (dataResponse.isEmpty()) {
 
             tvNoMessage.visibility = View.VISIBLE
-        }else{
+        } else {
             tvNoMessage.visibility = View.GONE
         }
 
@@ -521,6 +665,8 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
+
+
     }
 
 
@@ -532,5 +678,7 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
                 }
             }
     }
+
+
 }
 

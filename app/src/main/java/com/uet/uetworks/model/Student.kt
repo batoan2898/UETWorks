@@ -1,6 +1,7 @@
 package com.uet.uetworks.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class Student(
     @SerializedName("address") var address: String,
@@ -14,4 +15,4 @@ data class Student(
     @SerializedName("skype") var skype: String,
     @SerializedName("studentName") var studentName: String,
     @SerializedName("infoBySchool") var infoBySchool: InfoBySchool
-)
+) : Serializable

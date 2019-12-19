@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
-    android:background="#D6DFD6"
+    android:background="#E8EEE8"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -23,13 +23,7 @@
             android:layout_height="wrap_content"
             android:clickable="true">
 
-            <ImageButton
-                android:id="@+id/btnShowNotification"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentRight="true"
-                android:src="@android:drawable/ic_input_add" />
+
 
             <TextView
                 android:id="@+id/tvNewNotification"
@@ -43,7 +37,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_marginLeft="10dp"
+                android:layout_marginStart="13dp"
                 android:layout_below="@id/tvNewNotification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -122,7 +116,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_alignParentRight="true"
-                android:src="@android:drawable/ic_input_add" />
+                android:src="@android:drawable/arrow_down_float" />
 
             <LinearLayout
                 android:id="@+id/linearSearchPartner"
@@ -142,7 +136,7 @@
                     android:ems="10"
                     android:hint="@string/search_partner"
                     android:inputType="textPersonName"
-                    android:textSize="12sp" />
+                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/btnAddFollowPartner"
@@ -154,6 +148,8 @@
                     android:layout_marginBottom="4dp"
                     android:textColor="@color/colorWhite" />
             </LinearLayout>
+
+
 
             <ProgressBar
                 android:visibility="gone"
@@ -211,7 +207,7 @@
                     android:ems="10"
                     android:inputType="textPersonName"
                     android:hint="@string/search_other"
-                    android:textSize="12sp" />
+                    android:textSize="16sp" />
 
                 <Button
                     android:layout_marginBottom="4dp"

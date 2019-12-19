@@ -1,6 +1,7 @@
 package com.uet.uetworks.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 import java.text.DateFormat
 
 data class InternshipTerm (
@@ -14,4 +15,4 @@ data class InternshipTerm (
     @SerializedName("startDate") var startDate: String,
     @SerializedName("term") var term: Int,
     @SerializedName("year") var year: Int
-)
+) : Serializable

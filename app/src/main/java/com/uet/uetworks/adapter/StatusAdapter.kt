@@ -11,7 +11,9 @@ import com.uet.uetworks.model.Follows
 import kotlinx.android.synthetic.main.item_status.view.*
 
 class StatusAdapter(
-    context: Context?
+    context: Context?,
+    private val onClickListener: OnFollowerClick
+
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
@@ -39,6 +41,13 @@ class StatusAdapter(
             holder.itemView.tvCompanyName.setTextColor(Color.parseColor("#1977F3"))
             holder.itemView.tvCompanyStatus.setTextColor(Color.parseColor("#1977F3"))
         }
+        if (onClickListener != null) {
+            holder.itemView.setOnClickListener {
+                if (follows != null) {
+                    onClickListener.onItemClick(follows)
+                }
+            }
+        }
     }
 
     private fun showStatus(holder: StatusHolder, position: Int) {
@@ -51,5 +60,9 @@ class StatusAdapter(
             itemView.tvCompanyName.text = follows.partnerName
             itemView.tvCompanyStatus.text = follows.status
         }
+    }
+
+    interface OnFollowerClick {
+        fun onItemClick(follows: Follows)
     }
 }

@@ -20,6 +20,16 @@ import org.apache.commons.codec.digest.DigestUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import android.app.Activity
+import android.view.inputmethod.InputMethodManager
+import android.view.ViewGroup
+import android.view.MotionEvent
+import android.view.View
+import android.view.View.OnTouchListener
+import android.widget.EditText
+
+
+
 
 class LoginActivity : AppCompatActivity(), Callback<User> {
 
@@ -35,6 +45,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        setupUI(findViewById(R.id.parent))
         edtUser.setText(MySharedPreferences.getInstance(this).getUser())
         initKeyboard()
 
@@ -49,6 +60,34 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
         tvForgotPass.setOnClickListener {
             val intent = Intent(this, RecoverPassActivity::class.java)
             startActivity(intent)
+        }
+    }
+
+    fun hideSoftKeyboard(activity: Activity) {
+        val inputMethodManager = activity.getSystemService(
+            Activity.INPUT_METHOD_SERVICE
+        ) as InputMethodManager
+        inputMethodManager!!.hideSoftInputFromWindow(
+            activity.currentFocus!!.windowToken, 0
+        )
+    }
+
+    fun setupUI(view: View) {
+
+        // Set up touch listener for non-text box views to hide keyboard.
+        if (view !is EditText) {
+            view.setOnTouchListener { v, event ->
+                hideSoftKeyboard(this@LoginActivity)
+                false
+            }
+        }
+
+        //If a layout container, iterate over children and seed recursion.
+        if (view is ViewGroup) {
+            for (i in 0 until (view as ViewGroup).childCount) {
+                val innerView = (view as ViewGroup).getChildAt(i)
+                setupUI(innerView)
+            }
         }
     }
 
@@ -69,7 +108,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
         userName = edtUser.text.toString()
         password = edtPass.text.toString()
         if (userName.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Data Empty", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Kiểm tra lại tên đăng nhập hoặc mật khẩu", Toast.LENGTH_SHORT).show()
             return false
         }
         return true
@@ -91,12 +130,11 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
     override fun onResponse(call: Call<User>, response: Response<User>) {
         if (response.code() == 200) {
             token = response.body()?.token
-            Log.e("toan",token.toString())
             id = response.body()?.id
             role = response.body()?.role
             infoBySchoolId = response.body()?.infoBySchool
             studentId = response.body()?.studentId
-            Toast.makeText(this, "Successful", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -105,7 +143,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
 
 
         } else {
-            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Kiểm tra lại tên đăng nhập hoặc mật khẩu", Toast.LENGTH_SHORT).show()
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.uet.uetworks.ui.main
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
@@ -23,6 +24,7 @@ import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.*
 import com.uet.uetworks.ui.LoginActivity
+import com.uet.uetworks.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils
@@ -71,6 +73,8 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         //class spinner
         for (grade in 58..90){
             schoolyear_list.add(grade.toString())
@@ -133,6 +137,7 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
     }
+
 
 
     internal fun getInfoUser() {
