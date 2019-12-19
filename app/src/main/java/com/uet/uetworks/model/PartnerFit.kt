@@ -3,7 +3,11 @@ package com.uet.uetworks.model
 import com.google.gson.annotations.SerializedName
 
 data class PartnerFitOther(
-    @SerializedName("") var listPartner: ArrayList<Fit> = arrayListOf()
+    @SerializedName("") var listPartner: ArrayList<PartnerFit> = arrayListOf()
+)
+
+data class PartnerFit(
+    @SerializedName("") var listFit: ArrayList<Fit> = arrayListOf()
 )
 
 data class Fit(

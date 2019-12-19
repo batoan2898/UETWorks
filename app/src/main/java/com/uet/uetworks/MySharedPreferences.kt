@@ -22,6 +22,8 @@ class MySharedPreferences private constructor() {
 
         const val ID_MESSAGE = "idMessage"
 
+        const val USER_NAME = "user"
+
         fun getInstance(context: Context): MySharedPreferences {
             if (!::preferences.isInitialized) {
                 synchronized(sharedPref::class.java) {
@@ -48,15 +50,9 @@ class MySharedPreferences private constructor() {
     }
 
 
-    fun checkLogin(): Boolean {
-        return preferences.getBoolean(KEY_LOGIN, false)
-    }
 
-    fun setLogin(isLogin: Boolean) {
-        preferences.edit {
-            it.putBoolean(KEY_LOGIN, isLogin)
-        }
-    }
+
+
 
     fun setToken(token: String) {
         preferences.edit {
@@ -82,5 +78,15 @@ class MySharedPreferences private constructor() {
 
     fun getIdMessage(): String {
         return preferences.getString(ID_MESSAGE, ID_MESSAGE).toString()
+    }
+
+    fun setUser(userName: String){
+        preferences.edit{
+            it.putString(USER_NAME,userName)
+        }
+    }
+
+    fun getUser(): String{
+        return preferences.getString(USER_NAME, USER_NAME).toString()
     }
 }
