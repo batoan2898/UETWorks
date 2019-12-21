@@ -16,8 +16,6 @@ class MySharedPreferences private constructor() {
 
         private lateinit var preferences: SharedPreferences
 
-        private val KEY_LOGIN = "KEY_LOGIN"
-
         const val TOKEN = "token"
 
         const val ID_MESSAGE = "idMessage"

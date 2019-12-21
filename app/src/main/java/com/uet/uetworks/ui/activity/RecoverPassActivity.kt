@@ -1,4 +1,4 @@
-package com.uet.uetworks.ui
+package com.uet.uetworks.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
@@ -27,7 +27,7 @@ class RecoverPassActivity : AppCompatActivity(), Callback<EmailVNU> {
             if (checkEmail()) {
                 if (CommonMethod.isNetworkAvailable(this))
                     resetPassRetrofit(emailVNU)
-                else CommonMethod.showAlert("Internet Connectivity Failure", this)
+                else CommonMethod.showToast( this)
             }
         }
     }

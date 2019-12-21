@@ -1,6 +1,5 @@
-package com.uet.uetworks.ui.main
+package com.uet.uetworks.ui.fragment
 
-import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
@@ -16,15 +15,12 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.squareup.okhttp.ResponseBody
 import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.*
-import com.uet.uetworks.ui.LoginActivity
-import com.uet.uetworks.ui.MainActivity
+import com.uet.uetworks.ui.activity.LoginActivity
 import kotlinx.android.synthetic.main.fragment_profile.*
 import org.apache.commons.codec.binary.Hex
 import org.apache.commons.codec.digest.DigestUtils

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
 
 public class CommonMethod {
 
@@ -21,19 +22,8 @@ public class CommonMethod {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static void showAlert(String message, Activity context) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage(message).setCancelable(false)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-
-                    }
-                });
-        try {
-            builder.show();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void showToast( Activity context) {
+        Toast.makeText(context,"Hãy kiểm tra lại kết nối internet",Toast.LENGTH_LONG).show();
 
     }
 }

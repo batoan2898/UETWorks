@@ -1,7 +1,6 @@
-package com.uet.uetworks.ui.main
+package com.uet.uetworks.ui.fragment
 
 import android.app.AlertDialog
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,7 +17,6 @@ import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.Notification
 import com.uet.uetworks.model.NotificationDetail
-import com.uet.uetworks.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_notification.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,7 +39,12 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
         recyclerNotificationFragment.layoutManager = manager
         notificationAdapter = NotificationAdapter(context, this)
         recyclerNotificationFragment.adapter = notificationAdapter
+    }
+
+    override fun onResume() {
+        super.onResume()
         initView()
+
     }
 
     private fun initView() {
@@ -54,8 +57,9 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
     }
 
     private fun getNotification() {
+        dataNotificationResponse = ArrayList()
         api = ApiBuilder.client?.create(Api::class.java)!!
-        api.getNotification(0, 55, MySharedPreferences.getInstance(requireContext()).getToken())
+        api.getNotification(0, 100, MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<Notification> {
                 override fun onFailure(call: Call<Notification>, t: Throwable) {
                     Log.e("getNotification", t.message)
@@ -98,7 +102,7 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
         var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setTitle(notificationDetail.title)
         builder.setMessage(notificationDetail.content.replace("<br />", "\n"))
-        builder.setNeutralButton("OK") { _, _ ->
+        builder.setPositiveButton("OK") { _, _ ->
             if (notificationDetail.status == "NEW") seenNotification()
             dataNotification.observe(this, Observer {
                 notificationAdapter.notifyDataSetChanged()

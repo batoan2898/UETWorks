@@ -1,11 +1,9 @@
-package com.uet.uetworks.ui
+package com.uet.uetworks.ui.activity
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.uet.uetworks.CommonMethod
@@ -23,9 +21,7 @@ import retrofit2.Response
 import android.app.Activity
 import android.view.inputmethod.InputMethodManager
 import android.view.ViewGroup
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
 import android.widget.EditText
 
 
@@ -54,7 +50,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
             if (checkLogin()) {
                 if (CommonMethod.isNetworkAvailable(this))
                     loginRetrofit(userName, password)
-                else CommonMethod.showAlert("Internet Connectivity Failure", this)
+                else CommonMethod.showToast( this)
             }
         }
         tvForgotPass.setOnClickListener {
@@ -97,7 +93,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
                 if (checkLogin()) {
                     if (CommonMethod.isNetworkAvailable(this))
                         loginRetrofit(userName, password)
-                    else CommonMethod.showAlert("Internet Connectivity Failure", this)
+                    else CommonMethod.showToast(this)
                 }
             }
             false
@@ -124,7 +120,7 @@ class LoginActivity : AppCompatActivity(), Callback<User> {
 
 
     override fun onFailure(call: Call<User>, t: Throwable) {
-        Toast.makeText(this, "Login Failed!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show()
     }
 
     override fun onResponse(call: Call<User>, response: Response<User>) {

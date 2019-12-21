@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.main.HomeFragment">
+    tools:context=".ui.fragment.HomeFragment">
 
 
     <LinearLayout
@@ -220,13 +220,20 @@
                     android:textColor="@color/colorWhite" />
 
             </LinearLayout>
+            <TextView
+                android:layout_marginHorizontal="10dp"
+                android:id="@+id/tvInfoOther"
+                android:layout_below="@id/linearSearchOther"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="* Nếu bạn đang đi thực tập tại 1 công ty, hãy tìm kiếm và lựa chọn công ty đó. Nếu không có hãy đăng kí ở form bên dưới."/>
 
 
             <EditText
                 android:id="@+id/edtOther1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/linearSearchOther"
+                android:layout_below="@id/tvInfoOther"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:ems="10"

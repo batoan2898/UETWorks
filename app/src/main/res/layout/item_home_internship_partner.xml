@@ -9,10 +9,19 @@
     android:layout_marginHorizontal="10dp"
     tools:ignore="MissingConstraints">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvStatusPost"
+            android:text="Followed"
+            android:textSize="16sp"
+            android:textColor="@color/colorWhite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/textview_background"/>
 
         <TextView
             android:textStyle="bold"
@@ -23,9 +32,10 @@
 
         <TextView
             android:maxLines="1"
+            android:layout_below="@id/tvInternshipPartnerName"
             android:id="@+id/tvInternshipPartnerTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 </androidx.cardview.widget.CardView>

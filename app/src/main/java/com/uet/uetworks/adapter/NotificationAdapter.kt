@@ -2,6 +2,7 @@ package com.uet.uetworks.adapter
 
 import android.content.Context
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,8 +37,8 @@ class NotificationAdapter(
         if (holder is NotificationHolder) {
             showNotification(holder, position)
         }
-        holder.itemView.setBackgroundColor(Color.parseColor("#DBDBDB"))
         if (notificationDetail?.status?.equals("NEW")!!) {
+            Log.e("color",notificationDetail?.toString())
             holder.itemView.tvMessageTitle.setTextColor(Color.parseColor("#1977F3"))
             holder.itemView.tvSendDate.setTextColor(Color.parseColor("#1977F3"))
             holder.itemView.tvSenderName.setTextColor(Color.parseColor("#1977F3"))

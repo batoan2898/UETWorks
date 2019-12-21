@@ -1,4 +1,4 @@
-package com.uet.uetworks.ui
+package com.uet.uetworks.ui.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -13,6 +13,7 @@ import com.uet.uetworks.R
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.*
+import com.uet.uetworks.ui.activity.MainActivity
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.fragment_post_detail.*
 import retrofit2.Call
@@ -166,12 +167,12 @@ class PostDetailFragment : Fragment() {
             MySharedPreferences.getInstance(requireContext()).getToken(),
             PartnerDTO(null, null, null, null, null, 0)
         )
-            .enqueue(object : retrofit2.Callback<PartnerDTO> {
-                override fun onFailure(call: Call<PartnerDTO>, t: Throwable) {
+            .enqueue(object : retrofit2.Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
                     Log.e("unfollowPost", t.message)
                 }
 
-                override fun onResponse(call: Call<PartnerDTO>, response: Response<PartnerDTO>) {
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
                     if (response.code() == 200) {
                         Toast.makeText(
                             requireContext(),

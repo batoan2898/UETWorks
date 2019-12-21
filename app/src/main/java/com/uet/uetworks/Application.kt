@@ -7,4 +7,5 @@ class Application : Application() {
         super.onCreate()
         MySharedPreferences.getInstance(this)
     }
+
 }

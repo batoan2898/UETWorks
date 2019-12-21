@@ -204,6 +204,15 @@ interface Api {
         @Header("auth-token") token: String
     ): Call<Internship>
 
+    @SuppressLint("SupportAnnotationUsage")
+    @DELETE("/internship")
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    fun deleteInternship(
+        @Header("auth-token") token: String
+    ): Call<Void>
 
     @SuppressLint("SupportAnnotationUsage")
     @GET("/partnerId/name/fit")
@@ -235,7 +244,7 @@ interface Api {
         @Url url: String,
         @Header("auth-token") token: String,
         @Body partnerDTO: PartnerDTO
-    ): Call<PartnerDTO>
+    ): Call<Void>
 
     @Headers(
         "Content-Type: application/json",
@@ -265,6 +274,7 @@ interface Api {
     @RawRes
     fun addOtherByStudent(@Body partnerOther: PartnerOther,
                           @Header("auth-token") token: String): Call<Void>
+
 
     @SuppressLint("SupportAnnotationUsage")
     @POST("/addFollowByStudent")

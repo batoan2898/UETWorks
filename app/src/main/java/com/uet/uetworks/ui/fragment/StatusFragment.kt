@@ -1,4 +1,4 @@
-package com.uet.uetworks.ui.main
+package com.uet.uetworks.ui.fragment
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -13,30 +13,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.uet.uetworks.MySharedPreferences
-import com.uet.uetworks.R
 import com.uet.uetworks.adapter.StatusAdapter
 import com.uet.uetworks.api.Api
 import com.uet.uetworks.api.ApiBuilder
-import com.uet.uetworks.model.Company
 import com.uet.uetworks.model.Follows
 import com.uet.uetworks.model.Internship
-import com.uet.uetworks.ui.MainActivity
 import kotlinx.android.synthetic.main.fragment_status.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
-
-
 @Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class StatusFragment : Fragment(), StatusAdapter.OnFollowerClick {
 
-
     private lateinit var statusAdapter: StatusAdapter
     lateinit var api: Api
-    private var dataFollows = MutableLiveData<ArrayList<Follows?>>()
-    private var dataFollowsResponse: ArrayList<Follows> = arrayListOf()
+    var dataFollows = MutableLiveData<ArrayList<Follows?>>()
+    var dataFollowsResponse: ArrayList<Follows> = arrayListOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,6 +37,10 @@ class StatusFragment : Fragment(), StatusAdapter.OnFollowerClick {
         recyclerStatusFragment.layoutManager = manager
         statusAdapter = StatusAdapter(context,this)
         recyclerStatusFragment.adapter = statusAdapter
+    }
+
+    override fun onResume() {
+        super.onResume()
         initView()
     }
 
@@ -55,6 +52,7 @@ class StatusFragment : Fragment(), StatusAdapter.OnFollowerClick {
     }
 
     private fun getInternship() {
+        dataFollowsResponse = ArrayList()
         api = ApiBuilder.client?.create(Api::class.java)!!
         api.getInternship(MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<Internship> {
@@ -122,7 +120,7 @@ class StatusFragment : Fragment(), StatusAdapter.OnFollowerClick {
         if (follows.status == "PASS"){
             var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
             builder.setTitle("Xác nhận công ty thực tập")
-            builder.setMessage("Bạn chỉ được phép chọn 1 lần, Bạn đã chắc chắn ?")
+            builder.setMessage("Bạn chỉ được phép chọn 1 lần, Bạn đã chắc chắn muốn chọn " + follows.partnerName +" là đơn vị thực tập?")
             builder.setPositiveButton(
                 "Đồng ý"
             ) { dialog, _ ->

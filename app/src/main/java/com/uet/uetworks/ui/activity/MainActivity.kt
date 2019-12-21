@@ -1,12 +1,8 @@
-package com.uet.uetworks.ui
+package com.uet.uetworks.ui.activity
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.ActionBar
@@ -15,12 +11,24 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.uet.uetworks.R
-import com.uet.uetworks.ui.main.*
+import com.uet.uetworks.ui.fragment.*
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Context
 import android.graphics.Rect
+import android.os.Handler
+import android.util.Log
+import android.widget.Toast
+import com.uet.uetworks.CommonMethod
+import com.uet.uetworks.CommonMethod.isNetworkAvailable
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import android.net.NetworkInfo
+import android.net.ConnectivityManager
+import java.lang.reflect.Array
 
 
+@Suppress("UNREACHABLE_CODE")
 class MainActivity : AppCompatActivity() {
     private val homeFragment = HomeFragment.newInstance()
     private val statusFragment = StatusFragment.newInstance()
@@ -29,6 +37,8 @@ class MainActivity : AppCompatActivity() {
     private val messageFragment = MessageFragment.newInstance()
     private lateinit var currentFragment: Fragment
     private lateinit var toolbar: ActionBar
+    private var backPressedToExitOnce = false
+
     private val onNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
@@ -66,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         if (currentFragment == fragment)
             return
         supportFragmentManager.inTransaction {
+            fragment.onResume()
             show(fragment)
             hide(currentFragment)
         }
@@ -105,7 +116,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(com.uet.uetworks.R.layout.activity_main)
+        setContentView(R.layout.activity_main)
         toolbar = supportActionBar!!
 
         toolbar.title = getString(com.uet.uetworks.R.string.title_home)
@@ -118,4 +129,18 @@ class MainActivity : AppCompatActivity() {
             messageFragment
         )
     }
+
+    override fun onBackPressed() {
+        if (backPressedToExitOnce) {
+            super.onBackPressed()
+        } else {
+            this.backPressedToExitOnce = true
+            Toast.makeText(applicationContext, "Chạm lần nữa để thoát", Toast.LENGTH_SHORT).show()
+            Handler().postDelayed({
+                backPressedToExitOnce = false
+
+            }, 2000)
+        }
+    }
+
 }

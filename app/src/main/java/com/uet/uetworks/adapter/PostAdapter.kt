@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.uet.uetworks.R
 import com.uet.uetworks.model.Content
 import kotlinx.android.synthetic.main.item_home_internship_partner.view.*
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class PostAdapter(
     context: Context?,
@@ -16,6 +19,8 @@ class PostAdapter(
 
     private val inflater: LayoutInflater = LayoutInflater.from(context)
     private var data: ArrayList<Content?>? = null
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return PostHolder(inflater.inflate(R.layout.item_home_internship_partner, parent, false))
@@ -52,9 +57,20 @@ class PostAdapter(
 
     open class PostHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+
         fun bindData(content: Content) {
-            itemView.tvInternshipPartnerName.text = content.partnerName
+            var timeStamp = System.currentTimeMillis() / 1000
+            itemView.tvInternshipPartnerName.text = content.title
             itemView.tvInternshipPartnerTime.text = content.datePost
+            val formatter = SimpleDateFormat("dd-MM-yyyy")
+            val time = formatter.parse(content.expiryTime) as Date
+            val timeExpiry  = time.date
+            if (timeStamp > timeExpiry){
+            itemView.tvStatusPost.text = "Hết hạn"
+            }
+            else{
+
+            }
         }
 
     }

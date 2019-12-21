@@ -1,4 +1,4 @@
-package com.uet.uetworks.ui.main
+package com.uet.uetworks.ui.fragment
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -23,19 +22,22 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.JsonObject
 import com.uet.uetworks.MySharedPreferences
 import com.uet.uetworks.R
+import com.uet.uetworks.adapter.FollowAdapter
 import com.uet.uetworks.adapter.PostAdapter
 import com.uet.uetworks.model.*
-import com.uet.uetworks.ui.MainActivity
+import com.uet.uetworks.ui.activity.MainActivity
+import com.uet.uetworks.ui.custom.CustomViewDialog
 import kotlin.collections.ArrayList
-import com.uet.uetworks.ui.PostDetailFragment
 import ir.mirrajabi.searchdialog.SimpleSearchDialogCompat
 import ir.mirrajabi.searchdialog.core.SearchResultListener
-
+import java.util.*
 
 @Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS", "UNREACHABLE_CODE")
-class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.OnClickPost {
+class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.OnClickPost,
+    FollowAdapter.FollowedClicked {
 
 
     var totalPage: Int = 0
@@ -43,14 +45,20 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
     private var dataPost = MutableLiveData<java.util.ArrayList<Content?>>()
     private var dataPostResponse: ArrayList<Content> = arrayListOf()
     private var dataMessage = MutableLiveData<java.util.ArrayList<NewMessage?>>()
+    private var dataLiveFollows = MutableLiveData<ArrayList<Follows?>>()
+    private var dataListFollowsResponse: ArrayList<Follows?> = arrayListOf()
     private lateinit var newMessageAdapter: NewMessageAdapter
     private lateinit var postAdapter: PostAdapter
+    private lateinit var followAdapter: FollowAdapter
+    var customDialog: CustomViewDialog? = null
     lateinit var api: Api
     private var dataResponse: ArrayList<NewMessage> = arrayListOf()
     private var dataFitResponse: ArrayList<Company> = arrayListOf()
     private var dataOtherRespone: ArrayList<Company> = arrayListOf()
     var companyId: Int = 0
     var otherCompanyId: Int = 0
+    var codeResponseUnfollowInternship : Int = 0
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -66,21 +74,37 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
         postAdapter = PostAdapter(context, this)
         recyclerPost.adapter = postAdapter
         api = ApiBuilder.client?.create(Api::class.java)!!
-
-        getInternship()
-        getDataNewMessage()
         getDataFit()
         getDataOther()
+        getDataNewMessage()
+        checkFollowOther("Recruitment_other")
+
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getInternship()
         initView()
         checkFollowFit()
-        checkFollowOther("Recruitment_other")
-//        postInternship()
-        initFilterPartner()
-        initFilterOther()
-        initClickFollowPartner()
-        initClickFollowOther()
-        initClickInternship()
 
+    }
+
+
+
+
+    override fun onClickFollowed(follows: Follows) {
+        unfollowPartner(follows.postId,null)
+        if (codeResponseUnfollowInternship == 200){
+            dataLiveFollows.observe(this, Observer {
+                it.remove(follows)
+                followAdapter.notifyDataSetChanged()
+            })
+            Toast.makeText(requireContext(),"Hủy thành công",Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(requireContext(),"Hủy thất bại",Toast.LENGTH_SHORT).show()
+
+        }
     }
 
     private fun initClickInternship() {
@@ -88,9 +112,46 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
             if (btnInternship.text == getText(R.string.enrol)) {
                 postInternship()
             }else{
+                Log.e("dataresponse",dataListFollowsResponse.size.toString())
+
+                followAdapter = FollowAdapter(context,this)
+                dataLiveFollows.observe(this, Observer {
+                    followAdapter.setData(it)
+                })
+                if (dataListFollowsResponse.isEmpty()){
+                    var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+                    builder.setTitle("Xác nhận hủy thực tập")
+                    builder.setMessage("Bạn có chắc chắn muốn hủy đăng ký thực tập")
+                    builder.setNegativeButton("Hủy") { _, _ ->
+                    }
+                    builder.setPositiveButton("Đồng ý"){ _, _ ->
+                        deleteInternship()
+                    }
+                    val dialog: AlertDialog = builder.create()
+                    dialog.show()
+
+                }else{
+                    customDialog = CustomViewDialog(context as MainActivity,followAdapter)
+                    customDialog!!.show()
+                    customDialog!!.setCanceledOnTouchOutside(false)
+
+                }
 
             }
         }
+    }
+
+    private fun deleteInternship(){
+        api.deleteInternship(MySharedPreferences.getInstance(requireContext()).getToken())
+            .enqueue(object : Callback<Void>{
+                override fun onFailure(call: Call<Void>, t: Throwable) {
+                    Log.e("deleteInternship",t.message)
+                }
+
+                override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                }
+
+            })
     }
 
     private fun postInternship() {
@@ -102,6 +163,7 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
 
                 override fun onResponse(call: Call<Internship>, response: Response<Internship>) {
                     if (response.code() == 200) {
+                        Toast.makeText(requireContext(),"Đăng ký thành công",Toast.LENGTH_SHORT).show()
                         getInternship()
                         checkFollowOther("Recruitment_other")
                         checkFollowFit()
@@ -112,6 +174,7 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
 
 
     private fun getDataOther() {
+        dataOtherRespone = ArrayList()
         api.getOther(MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<ArrayList<ArrayList<Number>>> {
                 override fun onFailure(call: Call<ArrayList<ArrayList<Number>>>, t: Throwable) {
@@ -136,6 +199,8 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
     }
 
     private fun getDataFit() {
+        dataFitResponse = ArrayList()
+
         api.getFit(MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<ArrayList<ArrayList<Number>>> {
                 override fun onFailure(call: Call<ArrayList<ArrayList<Number>>>, t: Throwable) {
@@ -191,7 +256,16 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
     private fun initClickFollowPartner() {
         btnAddFollowPartner.setOnClickListener {
             if (btnAddFollowPartner.text == getString(R.string.cancel)) {
-                unfollowPartner(0, null)
+                var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+                builder.setMessage("Bạn muốn hủy đăng ký công ty này")
+                builder.setPositiveButton("Đồng ý") { _, _ ->
+                    unfollowPartner(0, null)
+                }
+                builder.setNegativeButton("Hủy"){_,_ ->
+
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
             } else {
                 addFollowPartner()
 
@@ -226,8 +300,9 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
         val address = edtOther2.text.toString()
         val email = edtOther3.text.toString()
         val phone = edtOther4.text.toString()
-        val partner = Partner(name, address, email, phone)
-        val other = PartnerOther(null, partner, "Recruitment_other")
+        val partnerDTO = Partner(name, address, email, phone)
+        val partner  = JsonObject()
+        val other = PartnerOther(partner, partnerDTO, "Recruitment_other")
         if (name.isNotEmpty() && address.isNotEmpty() && email.isNotEmpty() && phone.isNotEmpty()) {
             api.addOtherByStudent(
                 other,
@@ -254,6 +329,8 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
     }
 
     private fun getInternship() {
+        dataListFollowsResponse = ArrayList()
+
         api.getInternship(MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<Internship> {
                 override fun onFailure(call: Call<Internship>, t: Throwable) {
@@ -268,6 +345,26 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
                         "Thời gian đăng ký thực tập: " + response.body()?.internshipTerm?.startDate +
                                 " đến " + response.body()?.internshipTerm?.expiredDate
 
+                    dataListFollowsResponse.addAll(response.body()!!.follows)
+                    dataLiveFollows.postValue(dataListFollowsResponse.map { dataFollowsResponse ->
+                        dataFollowsResponse?.partnerId?.let {
+                            Follows(
+                                MySharedPreferences.getInstance(requireContext())
+                                    .getDate(dataFollowsResponse?.createdAt.toLong()),
+                                dataFollowsResponse?.id,
+                                dataFollowsResponse?.internshipTerm,
+                                dataFollowsResponse?.lecturersName,
+                                dataFollowsResponse?.partnerName,
+                                dataFollowsResponse?.postId,
+                                dataFollowsResponse?.postTitle,
+                                dataFollowsResponse?.status,
+                                dataFollowsResponse?.student,
+                                dataFollowsResponse?.studentName,
+                                it
+                            )
+                        }
+                    } as ArrayList<Follows?>)
+
                     if (response.body()?.createdAt != null) {
                         btnInternship.text = getString(R.string.cancel)
                     }
@@ -280,7 +377,7 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
 
     private fun initFilterPartner() {
         val dialog = SimpleSearchDialogCompat(requireContext(), "Search...",
-            "What are you looking for...?", null, dataFitResponse,
+            "Tìm kiếm đối tác của khoa...?", null, dataFitResponse,
             SearchResultListener<Company> { dialog, item, position ->
                 edtSearchPartner.setText(item.companyName.toString())
                 companyId = item.id?.toInt()!!
@@ -300,7 +397,7 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
 
     private fun initFilterOther() {
         val dialog = SimpleSearchDialogCompat(requireContext(), "Search...",
-            "What are you looking for...?", null, dataOtherRespone,
+            "Tìm kiếm công ty...?", null, dataOtherRespone,
             SearchResultListener<Company> { dialog, item, position ->
                 edtSearchOther.setText(item.companyName.toString())
                 otherCompanyId = item.id?.toInt()!!
@@ -357,12 +454,12 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
             "post/$id/student/unfollow",
             MySharedPreferences.getInstance(requireContext()).getToken(),
             PartnerDTO(null, null, null, null, postTitle, 0)
-        ).enqueue(object : Callback<PartnerDTO> {
-            override fun onFailure(call: Call<PartnerDTO>, t: Throwable) {
+        ).enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
                 Log.e("unfollow", t.message)
             }
 
-            override fun onResponse(call: Call<PartnerDTO>, response: Response<PartnerDTO>) {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 edtOther1.setText("")
                 edtOther2.setText("")
                 edtOther3.setText("")
@@ -389,12 +486,13 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
             "post/$id/student/unfollow",
             MySharedPreferences.getInstance(requireContext()).getToken(),
             PartnerDTO(null, null, null, null, postTitle, 0)
-        ).enqueue(object : Callback<PartnerDTO> {
-            override fun onFailure(call: Call<PartnerDTO>, t: Throwable) {
+        ).enqueue(object : Callback<Void> {
+            override fun onFailure(call: Call<Void>, t: Throwable) {
                 Log.e("unfollow", t.message)
             }
 
-            override fun onResponse(call: Call<PartnerDTO>, response: Response<PartnerDTO>) {
+            override fun onResponse(call: Call<Void>, response: Response<Void>) {
+                codeResponseUnfollowInternship = response.code()
                 edtSearchPartner.setText("")
                 edtSearchPartner.isEnabled = true
                 btnAddFollowPartner.text = getString(R.string.enrol)
@@ -440,6 +538,11 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
         initViewNewMessage()
         initViewPost()
         initViewOther()
+        initFilterPartner()
+        initFilterOther()
+        initClickFollowPartner()
+        initClickFollowOther()
+        initClickInternship()
     }
 
     private fun initViewOther() {
@@ -447,7 +550,16 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
             if (btnAddFollowOther.text == getText(R.string.enrol)) {
                 addOther()
             } else {
-                unfollowOther(0, "Recruitment_other")
+                var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
+                builder.setMessage("Bạn muốn hủy đăng ký công ty này")
+                builder.setPositiveButton("Đồng ý") { _, _ ->
+                    unfollowOther(0, "Recruitment_other")
+                }
+                builder.setNegativeButton("Hủy"){_,_ ->
+
+                }
+                val dialog: AlertDialog = builder.create()
+                dialog.show()
             }
 
         }
@@ -564,6 +676,7 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
 
 
     private fun getDataNewMessage() {
+        dataResponse = ArrayList()
         Log.e("toantoken", MySharedPreferences.getInstance(requireContext()).getToken())
         api.getMessage(MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<List<NewMessage>> {
@@ -609,7 +722,7 @@ class HomeFragment : Fragment(), NewMessageAdapter.OnClickMessage, PostAdapter.O
         var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setTitle(message.title)
         builder.setMessage(message.content.replace("<br />", "\n"))
-        builder.setNeutralButton("Ok") { _, _ ->
+        builder.setPositiveButton("Ok") { _, _ ->
             seenMessage()
             dataMessage.observe(this, Observer {
                 it.remove(message)
