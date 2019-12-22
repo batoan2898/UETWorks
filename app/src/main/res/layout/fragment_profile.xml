@@ -271,11 +271,11 @@
                     android:padding="7dp"
                     android:orientation="horizontal"
                     android:hint="Nhập tên lớp">
-                    <TextView
+                    <!--<TextView
                         android:layout_width="0dp"
                         android:layout_weight="0.1"
                         android:text="K"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent"/>-->
                     <Spinner android:layout_width="0dp"
                         android:layout_weight="0.4"
                         android:autofillHints="Chọn niên khóa"
