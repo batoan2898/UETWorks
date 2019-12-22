@@ -162,6 +162,17 @@ interface Api {
         @Body studentClassRequest: StudentClassRequest
     ):Call<Void>
 
+    @SuppressLint("SupportAnnotationUsage")
+    @GET("/grade-levels")
+    @RawRes
+    @Headers(
+        "Content-Type: application/json",
+        "Accept: application/json"
+    )
+    fun getGradeLevels(
+        @Header("auth-token") token: String
+    ): Call<ArrayList<GradeLevel>>
+
 	@SuppressLint("SupportAnnotationUsage")
     @PUT("/changePassword")    
     @RawRes

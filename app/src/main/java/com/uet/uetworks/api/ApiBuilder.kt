@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 internal object ApiBuilder {
-    val BASE_URL = "http://112.137.129.69:8180"
+    val BASE_URL = "http://112.137.129.69:5001"
     private var retrofit: Retrofit? = null
 
         val client: Retrofit?
