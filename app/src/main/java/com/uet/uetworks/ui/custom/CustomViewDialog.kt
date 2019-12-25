@@ -14,7 +14,6 @@ import kotlinx.android.synthetic.main.custom_dialog_layout.*
 
 
 class CustomViewDialog(var activity: MainActivity, private var adapter: RecyclerView.Adapter<*>) : Dialog(activity){
-    var dialog: Dialog? = null
 
     internal var recyclerView: RecyclerView? = null
     private var mLayoutManager: RecyclerView.LayoutManager? = null
@@ -31,10 +30,9 @@ class CustomViewDialog(var activity: MainActivity, private var adapter: Recycler
         recyclerView?.adapter = adapter
 
     }
-//    fun clickHandler(view : View){
-//        val vwParentRow = view.parent as LinearLayout
-//        val btnChild = vwParentRow.getChildAt(1) as Button
-//    }
+
+
+
 
 
 

@@ -44,10 +44,12 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.nav_home -> {
                     loadFragment(homeFragment)
+                    homeFragment.onResume()
                     toolbar.title = getString(R.string.title_home)
                 }
                 R.id.nav_status -> {
                     loadFragment(statusFragment)
+                    statusFragment.onResume()
                     toolbar.title = getString(R.string.title_status)
                 }
                 R.id.nav_profile -> {
@@ -55,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                     toolbar.title = getString(R.string.title_profile)
                 }
                 R.id.nav_notification -> {
+                    notificationFragment.onResume()
                     loadFragment(notificationFragment)
                     toolbar.title = getString(R.string.title_notification)
                 }
@@ -76,10 +79,10 @@ class MainActivity : AppCompatActivity() {
         if (currentFragment == fragment)
             return
         supportFragmentManager.inTransaction {
-            fragment.onResume()
             show(fragment)
             hide(currentFragment)
         }
+
         currentFragment = fragment
 
     }
@@ -87,7 +90,7 @@ class MainActivity : AppCompatActivity() {
     private fun addFragment(vararg fragment: Fragment) {
         supportFragmentManager.inTransaction {
             for (i in fragment.indices) {
-                add(com.uet.uetworks.R.id.frame_container_main, fragment[i]).hide(fragment[i])
+                add(R.id.frame_container_main, fragment[i]).hide(fragment[i])
             }
             currentFragment = fragment[0]
             show(currentFragment)
@@ -142,5 +145,12 @@ class MainActivity : AppCompatActivity() {
             }, 2000)
         }
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (isNetworkAvailable(this))
+            else CommonMethod.showToast(this)
+    }
+
 
 }

@@ -10,7 +10,7 @@ data class Internship(
     @SerializedName("id") var id: Int,
     @SerializedName("internshipTerm") var internshipTerm: InternshipTerm,
     @SerializedName("internshipType") var internshipType: String,
-    @SerializedName("lecturers") var lecturers: Lecturers,
+    @SerializedName("lecturers") var lecturers: Lecturers?,
     @SerializedName("partnerName") var partnerName: String,
     @SerializedName("startDate") var startDate: Long,
     @SerializedName("student") var student: Student,

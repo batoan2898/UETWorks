@@ -66,7 +66,7 @@ class StatusFragment : Fragment(), StatusAdapter.OnFollowerClick {
                 ) {
                     Log.e("codeInternship", response.code().toString())
                     response.body()?.let { body ->
-                        tvStatusTeacher.text = body.lecturers.fullName
+                        tvStatusTeacher.text = body.lecturers?.fullName
                         tvStatusKind.text = body.internshipType
                         tvStatusPlace.text = body.partnerName
                         tvStatusTime.text =
@@ -95,7 +95,7 @@ class StatusFragment : Fragment(), StatusAdapter.OnFollowerClick {
             })
     }
 
-    fun selectInternship(id : Int){
+    private fun selectInternship(id : Int){
         api.selectIntern("/select/intern/$id",MySharedPreferences.getInstance(requireContext()).getToken())
             .enqueue(object : Callback<Internship>{
                 override fun onFailure(call: Call<Internship>, t: Throwable) {
@@ -124,7 +124,7 @@ class StatusFragment : Fragment(), StatusAdapter.OnFollowerClick {
             builder.setPositiveButton(
                 "Đồng ý"
             ) { dialog, _ ->
-                selectInternship(follows.partnerId)
+                selectInternship(follows.id)
                 dialog.cancel() }
 
             builder.setNegativeButton(

@@ -1,6 +1,7 @@
 package com.uet.uetworks.ui.fragment
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +19,11 @@ import com.uet.uetworks.api.ApiBuilder
 import com.uet.uetworks.model.Notification
 import com.uet.uetworks.model.NotificationDetail
 import kotlinx.android.synthetic.main.fragment_notification.*
+import kotlinx.android.synthetic.main.item_notification.*
+import kotlinx.android.synthetic.main.item_notification.view.*
+import kotlinx.android.synthetic.main.item_notification.view.tvMessageTitle
+import kotlinx.android.synthetic.main.item_notification.view.tvSendDate
+import kotlinx.android.synthetic.main.item_notification.view.tvSenderName
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -25,6 +31,7 @@ import retrofit2.Response
 @Suppress("UNCHECKED_CAST", "NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification {
 
+    private lateinit var idNotifi: String
     private lateinit var notificationAdapter: NotificationAdapter
     private var dataNotification = MutableLiveData<ArrayList<NotificationDetail?>>()
     private var dataNotificationResponse: ArrayList<NotificationDetail> = arrayListOf()
@@ -43,6 +50,7 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
 
     override fun onResume() {
         super.onResume()
+        getNotification()
         initView()
 
     }
@@ -51,9 +59,7 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
         dataNotification.observe(this, Observer {
             notificationAdapter.setData(it)
         })
-        if (dataNotificationResponse.isEmpty()) {
-            getNotification()
-        }
+
     }
 
     private fun getNotification() {
@@ -95,56 +101,39 @@ class NotificationFragment : Fragment(), NotificationAdapter.OnClickNotification
     }
 
     override fun onNotificationClick(notificationDetail: NotificationDetail) {
-        notificationDetail.id.let {
-            MySharedPreferences.getInstance(requireContext()).setIdMessage(it)
-        }
-        clickNotification()
+        idNotifi = notificationDetail.id
         var builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setTitle(notificationDetail.title)
         builder.setMessage(notificationDetail.content.replace("<br />", "\n"))
         builder.setPositiveButton("OK") { _, _ ->
-            if (notificationDetail.status == "NEW") seenNotification()
-            dataNotification.observe(this, Observer {
-                notificationAdapter.notifyDataSetChanged()
-            })
+             seenNotification()
+            notificationDetail.senderName
         }
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
 
-    private fun clickNotification() {
-        api.clickNotification(
-            "message/" + MySharedPreferences.getInstance(requireContext()).getIdMessage() + "/seen",
-            MySharedPreferences.getInstance(requireContext()).getToken()
-        ).enqueue(object : Callback<NotificationDetail> {
-            override fun onFailure(call: Call<NotificationDetail>, t: Throwable) {
-                Log.e("click", t.message)
-            }
-
-            override fun onResponse(
-                call: Call<NotificationDetail>,
-                response: Response<NotificationDetail>
-            ) {
-                Log.e("codeClickSeen", response.code().toString())
-            }
-        })
-    }
 
     private fun seenNotification() {
         api.seenNotification(
-            "message/" + MySharedPreferences.getInstance(requireContext()).getIdMessage() + "/seen",
+            "message/$idNotifi/seen",
             MySharedPreferences.getInstance(requireContext()).getToken()
         )
-            .enqueue(object : Callback<Notification> {
-                override fun onFailure(call: Call<Notification>, t: Throwable) {
+            .enqueue(object : Callback<Void> {
+                override fun onFailure(call: Call<Void>, t: Throwable) {
                     Log.e("seen", t.message)
                 }
 
                 override fun onResponse(
-                    call: Call<Notification>,
-                    response: Response<Notification>
+                    call: Call<Void>,
+                    response: Response<Void>
                 ) {
                     Log.e("codeSeen", response.code().toString())
+                    if (response.code() == 200){
+//                        tvMessageTitle.setTextColor(Color.BLACK)
+//                        tvSendDate.setTextColor(Color.BLACK)
+//                        tvSenderName.setTextColor(Color.BLACK)
+                    }
                 }
             })
     }

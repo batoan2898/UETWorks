@@ -49,14 +49,13 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
     var token: String? = null
     var myDialog: Dialog? = null
     var spinner: Spinner? = null
-//    var numbergrade= listOf<Int>()
-//    var schoolyear_list= listOf<String>()
     var schoolyear_list:ArrayList<String> = ArrayList()
     var spinner2: Spinner? = null
-    //var class_list = arrayOf("N", "CA", "CAC", "CA-CLC", "CB", "CC", "CD", "CLC-CNTT", "T", "ĐA", "ĐB", "ĐA-CLC", "E", "V", "M", "H", "CE", "J").toCollection(ArrayList())
 
     var class_list: ArrayList<String> = ArrayList()
     var studentClassList: ArrayList<StudentClass> = ArrayList()
+    var gradeLevelList: ArrayList<GradeLevel> = ArrayList()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,16 +69,6 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        //class spinner
-        for (grade in 58..90){
-            schoolyear_list.add(grade.toString())
-        }
-        spinner = this.sp_grade
-        spinner!!.setOnItemSelectedListener(this)
-        val aa = ArrayAdapter(this.requireContext(), android.R.layout.simple_spinner_item, schoolyear_list)
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner!!.setAdapter(aa)
 
         //init student class
         initView(view)
@@ -154,7 +143,7 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
                     et_email_input.setText(dataResponse.email)
                     et_phone_input.setText(dataResponse.phoneNumber)
                     et_skype_input.setText(dataResponse.skype)
-                    sp_grade.setSelection(schoolyear_list.indexOf(dataResponse.infoBySchool.grade))
+                    sp_grade.setSelection(schoolyear_list.indexOf(getShortNameGrade(dataResponse.infoBySchool.grade)))
                     sp_class.setSelection(class_list.indexOf(dataResponse.infoBySchool.studentClass))
                     et_skill_input.setText("")
                     et_foreignlg_input.setText("")
@@ -167,6 +156,26 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
         })
 
+    }
+
+    internal fun getShortNameGrade(code: String?): String{
+        var res = schoolyear_list[0]
+        for(gradeLevel: GradeLevel in gradeLevelList){
+            if(code!= null && gradeLevel.code.equals(code)){
+                res = gradeLevel.shortName
+            }
+        }
+        return res
+    }
+
+    internal fun getGradeLevel(shortName: String?): String{
+        var res = gradeLevelList.get(0).code
+        for(gradeLevel: GradeLevel in gradeLevelList){
+            if(shortName!= null && gradeLevel.shortName.equals(shortName)){
+                res = gradeLevel.code
+            }
+        }
+        return res
     }
 
     internal fun updateInfo(){
@@ -190,14 +199,14 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
             dataRequest.phoneNumber=phoneNumber.toString()
             dataRequest.skype=skype.toString()
             dataRequest.desire=favor.toString()
-            dataRequest.infoBySchool.grade=grade.toString()
+            dataRequest.infoBySchool.grade=getGradeLevel(grade.toString())
             dataRequest.infoBySchool.studentClass=major.toString()
             for(studentClass: StudentClass in studentClassList){
                 if(major.toString().equals(studentClass.studentClass)){
                     dataRequest.infoBySchool.major=studentClass.className
                 }
             }
-            var studentClassRequest = StudentClassRequest(grade.toString(), major.toString())
+            var studentClassRequest = StudentClassRequest(getGradeLevel(grade.toString()), major.toString())
             api.putStudentClass(MySharedPreferences.getInstance(requireContext()).getToken(),studentClassRequest )
                 .enqueue(object: Callback<Void> {
                     override fun onFailure(call: Call<Void>, t: Throwable) {
@@ -255,39 +264,57 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     internal fun changePass(oldPass: String, newPass: String, retypeNewPass: String){
         api = ApiBuilder.client?.create(Api::class.java)!!
+        if (oldPass.length >=6 ) {
+            var changePassRequest = ChangePassRequest(
+                String(Hex.encodeHex(DigestUtils.md5(oldPass))),
+                String(Hex.encodeHex(DigestUtils.md5(newPass))),
+                retypeNewPass
+            )
 
-        var changePassRequest = ChangePassRequest(String(Hex.encodeHex(DigestUtils.md5(oldPass))),
-            String(Hex.encodeHex(DigestUtils.md5(newPass))),
-            retypeNewPass)
-//        val json = JSONObject()
-//        json.put("oldPassword", String(Hex.encodeHex(DigestUtils.md5(oldPass))))
-//        json.put("newPassword", String(Hex.encodeHex(DigestUtils.md5(newPass))))
-//        json.put("reTypeNewPass", retypeNewPass)
-//        val requestBody: RequestBody = RequestBody.create(MediaType.parse("application/json"), json.toString())
-        api.changePass(MySharedPreferences.getInstance(requireContext()).getToken(), changePassRequest)
-            .enqueue(object: Callback<ChangePassResponse>{
-                override fun onFailure(call: Call<ChangePassResponse>, t: Throwable) {
-                    Log.e("Error change password", t.message.toString())
-                    Toast.makeText(this@ProfileFragment.context,"Đổi mật khẩu thất bại", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onResponse(
-                    call: Call<ChangePassResponse>,
-                    response: Response<ChangePassResponse>
-                ) {
-                    if (response.code() == 200) {
-                        Toast.makeText(this@ProfileFragment.context,"Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show()
-                        token = response.body()?.token
-                        Log.e("newToken",token.toString())
-                        MySharedPreferences.getInstance(this@ProfileFragment.context!!).setToken(token = token!!)
-                        myDialog!!.dismiss()
-                    }else {
-                        Toast.makeText(this@ProfileFragment.context,response.message(), Toast.LENGTH_SHORT).show()
-                        Log.e("Error: ",response.message() + " - " + response.message())
+            api.changePass(
+                MySharedPreferences.getInstance(requireContext()).getToken(),
+                changePassRequest
+            )
+                .enqueue(object : Callback<ChangePassResponse> {
+                    override fun onFailure(call: Call<ChangePassResponse>, t: Throwable) {
+                        Log.e("Error change password", t.message.toString())
+                        Toast.makeText(
+                            this@ProfileFragment.context,
+                            "Đổi mật khẩu thất bại",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-                }
 
-            })
+                    override fun onResponse(
+                        call: Call<ChangePassResponse>,
+                        response: Response<ChangePassResponse>
+                    ) {
+                        if (response.code() == 200) {
+                            Toast.makeText(
+                                this@ProfileFragment.context,
+                                "Đổi mật khẩu thành công",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            token = response.body()?.token
+                            Log.e("newToken", token.toString())
+                            MySharedPreferences.getInstance(this@ProfileFragment.context!!)
+                                .setToken(token = token!!)
+                            myDialog!!.dismiss()
+                        } else {
+                            Toast.makeText(
+                                this@ProfileFragment.context,
+                                response.message(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            Log.e("Error: ", response.message() + " - " + response.message())
+                        }
+                    }
+
+                })
+        }
+        else{
+            Toast.makeText(requireContext(),"Mật khẩu không đủ độ dài",Toast.LENGTH_SHORT).show()
+        }
     }
 
     internal fun initView(view: View){
@@ -314,7 +341,32 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         bb.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         spinner2!!.setAdapter(bb)
 
-                        getInfoUser()
+                        api.getGradeLevels(MySharedPreferences.getInstance(requireContext()).getToken())
+                            .enqueue(object: Callback<ArrayList<GradeLevel>>{
+                                override fun onFailure(
+                                    call: Call<ArrayList<GradeLevel>>,
+                                    t: Throwable
+                                ) {
+                                    Log.e("Error get grade level", t.message.toString())
+                                    Toast.makeText(this@ProfileFragment.context,"Lấy danh sách niên khóa thất bại", Toast.LENGTH_SHORT).show()
+                                }
+
+                                override fun onResponse(
+                                    call: Call<ArrayList<GradeLevel>>,
+                                    response: Response<ArrayList<GradeLevel>>
+                                ) {
+                                    gradeLevelList = response.body()!!
+                                    for(gradeLevel: GradeLevel in gradeLevelList){
+                                        schoolyear_list.add(gradeLevel.shortName)
+                                    }
+                                    spinner = sp_grade
+                                    spinner!!.setOnItemSelectedListener(this@ProfileFragment)
+                                    val aa = ArrayAdapter(this@ProfileFragment.context!!, android.R.layout.simple_spinner_item, schoolyear_list)
+                                    aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                                    spinner!!.setAdapter(aa)
+                                    getInfoUser()
+                                }
+                            })
                     }
 
                 }

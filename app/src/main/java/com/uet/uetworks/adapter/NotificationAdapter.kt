@@ -39,9 +39,10 @@ class NotificationAdapter(
         }
         if (notificationDetail?.status?.equals("NEW")!!) {
             Log.e("color",notificationDetail?.toString())
-            holder.itemView.tvMessageTitle.setTextColor(Color.parseColor("#1977F3"))
-            holder.itemView.tvSendDate.setTextColor(Color.parseColor("#1977F3"))
-            holder.itemView.tvSenderName.setTextColor(Color.parseColor("#1977F3"))
+//            holder.itemView.setBackgroundColor(Color.parseColor())
+//            holder.itemView.tvMessageTitle.setTextColor(Color.parseColor("#1977F3"))
+//            holder.itemView.tvSendDate.setTextColor(Color.parseColor("#1977F3"))
+//            holder.itemView.tvSenderName.setTextColor(Color.parseColor("#1977F3"))
         }
         holder.itemView.setOnClickListener {
             onClickListener.onNotificationClick(notificationDetail)

@@ -63,7 +63,7 @@ class MySharedPreferences private constructor() {
     fun getDate(time: Long): String {
         val cal = Calendar.getInstance(Locale.ENGLISH)
         cal.timeInMillis = time
-        return DateFormat.format("dd-MM-yyyy HH:mm:ss", cal).toString()
+        return DateFormat.format("dd-MM-yyyy", cal).toString()
     }
 
     fun setIdMessage(id: String) {

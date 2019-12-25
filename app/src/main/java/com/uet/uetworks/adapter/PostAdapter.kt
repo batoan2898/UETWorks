@@ -1,6 +1,7 @@
 package com.uet.uetworks.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
+@Suppress("DEPRECATION")
 class PostAdapter(
     context: Context?,
     private val onClickListener: OnClickPost
@@ -59,18 +61,20 @@ class PostAdapter(
 
 
         fun bindData(content: Content) {
-            var timeStamp = System.currentTimeMillis() / 1000
+            var timeStamp = System.currentTimeMillis()/ 1000
             itemView.tvInternshipPartnerName.text = content.title
             itemView.tvInternshipPartnerTime.text = content.datePost
             val formatter = SimpleDateFormat("dd-MM-yyyy")
             val time = formatter.parse(content.expiryTime) as Date
-            val timeExpiry  = time.date
+            val timeExpiry  = time.time
+            Log.e("timestamp",timeStamp.toString())
             if (timeStamp > timeExpiry){
             itemView.tvStatusPost.text = "Hết hạn"
             }
             else{
 
             }
+
         }
 
     }

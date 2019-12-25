@@ -44,7 +44,7 @@ interface Api {
     fun seenMessage(
         @Url url: String,
         @Header("auth-token") token: String
-    ): Call<NewMessage>
+    ): Call<Void>
 
     @SuppressLint("SupportAnnotationUsage")
     @OPTIONS
@@ -85,16 +85,15 @@ interface Api {
     ): Call<Notification>
 
     @SuppressLint("SupportAnnotationUsage")
-    @OPTIONS
+    @GET("/grade-levels")
+    @RawRes
     @Headers(
         "Content-Type: application/json",
         "Accept: application/json"
     )
-    @RawRes
-    fun clickNotification(
-        @Url url: String,
+    fun getGradeLevels(
         @Header("auth-token") token: String
-    ): Call<NotificationDetail>
+    ): Call<ArrayList<GradeLevel>>
 
     @SuppressLint("SupportAnnotationUsage")
     @PUT
@@ -106,7 +105,7 @@ interface Api {
     fun seenNotification(
         @Url url: String,
         @Header("auth-token") token: String
-    ): Call<Notification>
+        ): Call<Void>
 
     @SuppressLint("SupportAnnotationUsage")
     @GET
@@ -254,7 +253,7 @@ interface Api {
         @Url url: String,
         @Header("auth-token") token: String,
         @Body postFollow: PostFollow
-    ): Call<PostFollow>
+    ): Call<Void>
 
 
     @Headers(
